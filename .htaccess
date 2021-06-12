@@ -1,0 +1,9 @@
+# Activation de la réécriture des URL 
+RewriteEngine On
+
+# Conditions de réécriture des URL : on interdit l'accès aux fichiers ou aux dossiers
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Réécriture de toutes les URL
+RewriteRule ^(.*)$ index.php?page=$1

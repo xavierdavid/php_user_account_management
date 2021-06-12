@@ -1,0 +1,693 @@
+
+/*****************************************************/
+/***                    Polices                    ***/
+/*****************************************************/
+/* Raleway */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap');
+/* Open Sans */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Raleway:wght@100;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&family=Raleway:wght@600&display=swap');
+
+
+/*****************************************************/
+/***                    Couleurs                   ***/
+/*****************************************************/
+:root {
+    --color-primary: #184059;
+    --color-secondary: #5D8AA6;
+    --color-light: #D7D7D9;
+    --color-dark:#333;
+    --color-title: #ff7b14;
+    --color-text: #292929;
+    --color-danger: #df0d37;
+    --color-warning: #b36506;
+    --color-success: #2c8d2c;
+    --color-white: #f1f1f1;
+    --color-grey: #d6d1d1;
+}
+
+
+/*****************************************************/
+/***          Suppression des marges du body       ***/
+/*****************************************************/
+*, ::before, ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/*****************************************************/
+/***            Paramétrage du conteneur           ***/
+/*****************************************************/
+.content {
+    width: 100%;
+    margin: 70px auto;
+    padding: 0;
+}
+
+/*****************************************************/
+/***                     Titres                    ***/
+/*****************************************************/
+h1 {
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    padding: 20px;
+    color: var(--color-title);
+    font-size: 35px;
+}
+
+h2 {
+    font-family: 'Raleway', sans-serif;
+    padding: 20px;
+    color: var(--color-secondary);
+    font-size: 25px;
+}
+
+h3 {
+    font-family: 'Raleway', sans-serif;
+    padding: 20px;
+    color: var(--color-title);
+    font-size: 20px; 
+}
+
+/*****************************************************/
+/***                     Liens                     ***/
+/*****************************************************/
+a {
+    font-family: 'Raleway', sans-serif; 
+}
+
+
+/*****************************************************/
+/***                  Paragraphes                  ***/
+/*****************************************************/
+p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    color: var(--color-text);
+}
+
+/*****************************************************/
+/***                    Boutons                    ***/
+/*****************************************************/
+.button {
+    color: #ffffff;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    height: 40px;
+    width: 220px;
+    display: flex; 
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.button-info {
+    background-color: var(--color-title);
+    border: 1px solid var(--color-white);
+    border-radius: 15px;
+}
+
+.button-info:hover {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    transition: 0.8s;
+}
+
+/*****************************************************/
+/***                  Formulaires                  ***/
+/*****************************************************/
+.form-container {
+    width: 100%;
+    background-color: var(--color-secondary);
+    background-image: linear-gradient(to bottom, var(--color-secondary), var(--color-primary));
+    padding: 20px;
+    height: 80vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.form-wrap {
+   flex-shrink: 0;
+   background-color: #fff;
+   border-radius: 10px;
+   padding: 10px;
+}
+
+.form-wrap h2 {
+    text-align: center;
+    color: var(--color-secondary);
+}
+
+.form-wrap h2 i {
+    color: var(--color-title);
+    margin-right: 5px;
+}
+
+label {
+    display: block;
+    position: relative;
+    margin: 5px 25px;
+    font-size: 16px;
+    padding: 10px 0 5px 0;
+    color: var(--color-secondary);
+}
+
+input {
+    display: block;
+    width: 400px;
+    margin: 10px 20px 20px 20px;
+    outline: 0;
+    background-color: var(--color-light);
+    border: 0;
+    padding: 10px 12px;
+    border-radius: 3px;
+    font-size: 15px;
+    border: 1px solid rgba(0,0,0,0.3);
+}
+
+input:focus {
+    border: 2px solid var(--color-title);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.message-alert {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 20px;
+}
+
+.alert-danger {
+    color: var(--color-danger);
+}
+
+.alert-success {
+    color: var(--color-success);
+}
+
+.alert-warning {
+    color: var(--color-warning);
+}
+
+.alert-info {
+    color: var(--color-title);
+}
+
+.form-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.checkbox-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.checkbox-wrap input {
+    width: 15px;
+    margin: 10px -10px 5px 20px;
+}
+
+.form-link {
+    padding: 15px;
+}
+
+.form-link p {
+    margin: 5px 0;
+}
+
+.form-link a {
+    text-decoration: none; 
+    color: var(--color-title);
+    font-weight: bold;
+}
+
+.form-link a:hover {
+    color: var(--color-primary);
+    transition: 0.8s;
+}
+
+.form-link i {
+    color: var(--color-secondary);
+    margin-right: 5px;
+}
+
+/*****************************************************/
+/***                     Images                    ***/
+/*****************************************************/
+.largeSizeImage {
+    width: 200px;
+}
+
+.mediumSizeImage {
+    max-width: 100px;
+}
+
+.smallSizeImage {
+    max-width: 60px;
+}
+
+.verySmallSizeImage {
+    max-width: 40px;
+}
+
+/*****************************************************/
+/***    Header - Barre de navigation responsive    ***/
+/*****************************************************/
+header {
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    top: 0;
+}
+
+nav {
+    position: relative;
+    height: 70px;
+    width: 100%;
+    background: var(--color-dark);
+}
+
+.list-nav {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.item-nav {
+    display: inline-block;
+    line-height: 70px;
+    font-size: 18px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.item-nav a {
+    text-decoration: none;
+    color: var(--color-white);
+}
+
+.item-nav a:hover {
+    color: var(--color-secondary);
+}
+
+.btn-toggle-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    display: none;
+} 
+
+.item-login-logout {
+    position: absolute;
+    right: 15px;
+    top: 50%; /* poussé de la moitié de hauteur du référent */
+    transform: translateY(-50%); /* tiré de la moitié de sa propre hauteur */
+    cursor: pointer;
+}
+
+.item-login-logout span {
+    margin-right: 0px;
+    margin-left: 5px;
+}
+
+.item-login-logout a {
+    text-decoration: none;
+    color: var(--color-white);
+}
+
+.item-login-logout a:hover {
+    color:var(--color-secondary);
+}
+
+/* Image de l'utilisateur */
+.item-user-image {
+    display: inline-block;  
+}
+
+.item-user-image img {
+    height: 40px;
+    border-radius: 50%;
+}
+
+.dropdown span {
+    margin-left: 5px;
+}
+
+.dropdown:hover {
+    color: var(--color-light);
+}
+
+/* Insertion d'un pseudo-élément après l'élément dropdown */
+.dropdown::after {
+    content: ' ';
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+
+/* Insertion d'un image svg dans le contenu du pseudo-élément */
+.dropdown::after {
+    background-image: url(../img/down-arrow.svg);
+}
+
+/* Dropdown du menu utilisateur authentifié */
+.dropdown-box {
+    position: relative;
+    display: inline-block;
+}
+
+/* Contenu de la dropdown - Caché par défaut */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 17px;
+    right: -15px;
+    cursor: pointer;
+    background-color: var(--color-dark);
+    min-width: 250px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.0.5);
+}
+
+/* Liens à l'intérieur de la dropdown */
+.dropdown-content a {
+    color: var(--color-white);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Changement de couleur au survol des liens de la dropdown */
+.dropdown-content a:hover {
+    background-color: var(--color-grey);
+}
+
+/* Icônes de login et logout */
+.dropdown-content .login-icon, .dropdown-content .logout-icon {
+    font-size: 20px;
+}
+
+.dropdown-content hr {
+    background-color: var(--color-secondary);
+}
+
+/* Activation de l'affichage de la dropdown */
+.active-dropdown {
+    display: block;
+}
+
+.admin-item, .logout-item {
+    position: relative;
+}
+
+.admin-item .admin-icon {
+    margin-right: 5px;
+    font-size: 15px;
+    color: var(--color-title);
+}
+
+.logout-item .logout-icon {
+    margin-right: 5px;
+    font-size: 15px;
+    color: var(--color-title);
+}
+
+.btn-toggle-container img {
+    width: 40px;
+}
+
+/* Media-queries barre de navigation */
+@media screen and (max-width: 1110px) {
+    .btn-toggle-container {
+        display: block;
+    }
+
+    nav {
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .list-nav {
+        position: relative;
+        top: 70px;
+        display: none;
+    }
+
+    .item-nav {
+        display: block;
+        background: #333;
+        margin: 0;
+        line-height: 60px;;
+    }
+
+    .item-nav a {
+        font-size: 20px;
+    }
+
+    .item-login-logout span {
+        display: none;
+    }
+
+    .item-login-logout {
+        right: 80px;
+        margin: 0px 20px;
+    }
+
+    .item-login-logout .login-icon, .item-login-logout {
+        font-size: 20px;
+        margin-left: 0px;
+        margin-right: 0px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Activation de l'affichage du menu responsive */
+    .active-menu {
+        display: block;
+    }
+
+    .dropdown::after {
+        margin-right: 10px;
+    }
+
+    .dropdown-content {
+        right: -80px;
+    }
+
+    .dropdown-content a {
+        font-size: 15px;
+    }
+}
+
+/*****************************************************/
+/***        Page profil - Compte utilisateur       ***/
+/*****************************************************/
+.profile-wrapper {
+    width: 100%;
+    margin: auto;
+}
+
+.user-profile {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: var(--color-secondary);
+    padding: 50px 0px 140px 0px;
+    margin-bottom: -110px;
+}
+
+.user-identity, .user-info {
+    width: 500px;
+    margin: 25px;
+}
+
+.user-identity i {
+    font-size: 25px;
+    color: var(--color-title);
+    margin-right: 10px;
+}
+
+.user-identity h2 {
+    text-align: center;
+    color: var(--color-white);
+}
+
+.user-identity img {
+    display: block;
+    width: 140px;
+    height: 150px;
+    margin: 20px auto;
+    border-radius: 50%;
+    transition: transform .8s ease-in-out;
+}
+
+.user-identity img:hover {
+    transform: rotate(20deg);
+}
+
+.user-info p {
+    text-align: left;
+    color: var(--color-white);
+    padding: 10px 0px 10px 0px;
+}
+
+.user-info h3 {
+    text-align: left;
+    font-weight: bold;
+}
+
+.user-info i {
+    margin: 0 10px 0 20px;
+    color: var(--color-title);
+}
+
+.user-info a {
+    text-decoration: none;
+    margin: 15px 0px 0px 18px;
+}
+
+.user-profile span img {
+    width: 60px;
+}
+
+
+/* Cartes des options utilisateurs */
+.user-features {
+    width: 100%;
+    margin: auto;
+}
+
+#features-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.feature-card {
+    width: 380px;
+    margin: 30px;
+    text-align: center;
+    margin: 30px;
+    border: 0px var(--color-secondary) solid;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); 
+    transition: 0.3s;
+}
+
+.feature-card a {
+    text-decoration: none;
+}
+
+.feature-picture {
+   width: 380px;
+   height: 230px;
+   opacity: 1;
+}
+
+.feature-picture img {
+    min-width: 380px;
+    height: 230px;
+}
+
+.feature-title {
+    margin: auto;
+    background-color: #ffffff;
+    padding: 28px 0px 28px 0px;
+}
+
+.feature-title p {
+    text-align: center;
+    color: var(--color-title);
+    font-family: 'Raleway', 'sans-serif';
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.feature-title i {
+    color: var(--color-secondary);
+    margin-right: 10px;
+}
+
+/* Dernières publications utilisateur */
+.user-last-posts {
+    width: 100%;
+    padding: 20px 0px 50px 0px;
+}
+
+.user-last-posts h2 {
+    color: var(--color-secondary);
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+
+/*****************************************************/
+/***          Page de connexion utilisateur        ***/
+/*****************************************************/
+
+
+
+
+
+
+/*****************************************************/
+/***                     Footer                    ***/
+/*****************************************************/
+.footer-container {
+    background-color: #333;
+    color: #f1f1f1;
+    text-align: center;
+    /* position: absolute;
+    bottom: 0; */ 
+    margin-top: 20px;
+    width: 100%;
+    padding: 20px;
+}
+
+.footer-container p {
+    color: var(--color-white)
+}
+
+.footer-container a {
+    text-decoration: none;
+    color: var(--color-white)
+}
+
+.footer-container a:hover {
+    color: var(--color-secondary)
+}
+
+/*****************************************************/
+/***                    Pagination                 ***/
+/*****************************************************/
+.pagination nav {
+    background-color: white;
+    text-align: center;
+}
