@@ -17,7 +17,7 @@ abstract class Model
      */
     private static function setDataBase()
     {
-        self::$pdo = new PDO('mysql:host=localhost;dbname=phpbaseproject; charset=utf8', 'root', 'root');
+        self::$pdo = new PDO('mysql:host=localhost;dbname=accountmanager;charset=utf8','root','');
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
     }
 

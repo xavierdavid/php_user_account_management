@@ -58,10 +58,11 @@ class User
      */
     public function hydrate(array $data)
     {
+        var_dump($data);
         // On boucle sur le tableau associatif $data
         foreach ($data as $key => $value) {
            // Définition du setter correspondant à la clé 'attribut'
-           $setterMethod = 'set' . ucFirst($key);
+           $setterMethod = 'set'.ucfirst($key);
            // Si le setter existe dans la classe ou l'objet courant
            if (method_exists($this, $setterMethod)) {
                // Alors on appelle le setter pour assigner la valeur 
@@ -94,7 +95,7 @@ class User
     public function setFirstName(string $firstName)
     {
         // Si le prénom est vide ou si ce n'est pas une chaîne d'au moins 3 caractères
-        if(empty($fistName) || (!is_string($firstName) && strlen($firstName) <= 3)) {
+        if(empty($firstName) || (!is_string($firstName) && strlen($firstName) <= 3)) {
             // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
             $this->error[] = self::INVALID_FIRSTNAME;
         } else {
@@ -105,12 +106,12 @@ class User
         }
     }
 
-    public function getLasttName()
+    public function getLastName()
     {
         return $this->lastName;
     }
 
-    public function setLasttName(string $lastName)
+    public function setLastName(string $lastName)
     {
         // Si le nom est vide ou si ce n'est pas une chaîne d'au moins 2 caractères
         if(empty($lastName) || (!is_string($lastName) && strlen($lastName) <= 2)) {
@@ -119,7 +120,7 @@ class User
         } else {
             // Sinon on affecte la valeur $lastName à l'attribut de l'objet en cours
             // Contrôle de validité - $lastName doit être une chaîne
-            $this->firstName = (string) $lastName;
+            $this->lastName = (string) $lastName;
             return $this;
         }
     }
@@ -170,7 +171,7 @@ class User
     public function setPostal(string $postal)
     {
         // Si le nom est vide ou ou s'il n'est pas conforme à l'expression régulière
-        if(empty($postal) || !preg_match('^(([0-8][0-9])|(9[0-5])|(2[ab]))[0-9]{3}$', $postal)) {
+        if(empty($postal) || !preg_match('#^(([0-8][0-9])|(9[0-5])|(2[ab]))[0-9]{3}$#', $postal)) {
             // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
             $this->error[] = self::INVALID_POSTAL;
         } else {
@@ -291,13 +292,13 @@ class User
         return $this->activationToken;
     }
 
-    public function setActivationToken(int $activationToken)
+    public function setActivationToken(string $activationToken)
     {
         // Si le token de validation n'est pas vide
-        if(!empty($id)) {
+        if(!empty($activationToken)) {
             // Alors on affecte la valeur $activationToken à l'attribut de l'objet en cours
-            // Contrôle de validité - $id doit être un entier
-            $this->activationToken = (int) $activationToken;
+            // Contrôle de validité - $activationToken doit être une châine
+            $this->activationToken = (string) $activationToken;
             return $this;
         };
     }
@@ -356,13 +357,13 @@ class User
     }
 
     /**
-     * Vérifie si tous les pré-requis nécessaires sont vérifés pour valider un utilisateur
+     * Vérifie si tous les pré-requis nécessaires sont vérifiés pour valider un utilisateur
      *
      * @return boolean
      */
     public function isUserValid(): bool
     {
         // Retourne 'true' si les informations requises suivantes ne sont pas vides
-        return !(empty($this->email) || empty($this->password) || empty($this->firstName) || empty($this->lastNme));
+        return !(empty($this->email) || empty($this->password) || empty($this->firstName) || empty($this->lastName));
     }
-}
+} 

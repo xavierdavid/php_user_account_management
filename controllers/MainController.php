@@ -53,7 +53,7 @@ abstract class MainController
             "page_description" => "Page permettant de gérer les erreurs",
             "page_title" => "Page d'erreur",
             "errorMessage" => $errorMessage,
-            "view" => "./views/error.view.php",
+            "view" => "./views/error.php",
             "template" => "views/common/template.php"
         ];
         // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données

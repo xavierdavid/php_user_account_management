@@ -35,6 +35,10 @@ try {
     switch ($page) {
         case "accueil": $homeController->home();
             break;
+        case "inscription" : $homeController->register();
+            break;
+        case "validation_inscription" : $homeController->register_validation();
+            break;
         case "compte" :
             // On teste le 2ème élément de l'url
             switch ($url[1]) {

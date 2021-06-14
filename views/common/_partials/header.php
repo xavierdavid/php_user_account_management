@@ -63,7 +63,7 @@
                 <!-- Liens de connexion -->
                 <a href="#"><i class="fas fa-sign-in-alt login-icon"></i><span> Connexion</span></a>
                 <!-- Liens d'inscription -->
-                <a href="#"><span> Inscription</span></a>
+                <a href="<?= URL ?>inscription"><span> Inscription</span></a>
         </div>
         
         <!-- Icône de menu hamburger responsive -->
