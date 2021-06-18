@@ -58,7 +58,6 @@ class User
      */
     public function hydrate(array $data)
     {
-        var_dump($data);
         // On boucle sur le tableau associatif $data
         foreach ($data as $key => $value) {
            // Définition du setter correspondant à la clé 'attribut'

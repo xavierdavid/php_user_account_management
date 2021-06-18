@@ -58,6 +58,7 @@
                     <button class="button button-info" type="submit">S'inscrire</button>
                 </div>
             </div>
-        </form>
+        </div>
+    </form>
 </section>
             

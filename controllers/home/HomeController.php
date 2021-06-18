@@ -3,17 +3,14 @@
 //Namespace 'Home' des contrôleurs
 namespace App\Controllers\Home;
 
-// Utilisation de la classe Maincontroller associée au namespace des Controllers
-use App\Controllers\MainController;
-// Utilisation du UserManager associée au namespace des Managers
-use App\Models\Managers\UserManager;
-// Utilisation de la classe User du namespace des Entities
+// Utilisation des classes
+use App\Services\Utility;
 use App\Models\Entities\User;
-use DateTime;
+use App\Controllers\MainController;
+use App\Models\Managers\UserManager;
 
 class HomeController extends MainController
 {
-
     private $userManager;
 
     /**
@@ -116,23 +113,25 @@ class HomeController extends MainController
                         die("Les deux mots de passe saisis ne sont pas identiques");
                     }
 
-                    // Hashage du mot de passe
+                    // Hachage du mot de passe
                     $hashPassword = password_hash($password, PASSWORD_DEFAULT);
 
-                    // Génération automatique du slug de l'utilisateur
-                    $slug = strtolower($firstName) . '-' . strtolower($lastName);
-                   
-                    // Génération d'un token d'activation
-                    $activationToken = "token d'activation";
+                    // Génération automatique du slug de l'utilisateur à l'aide de la fonction generateSlug(), à partir d'une chaîne composée de son nom et de son prénom
+                    $text = $firstName . " " . $lastName;
+                    $slug = Utility::generateSlug($text);
+
+                    // Génération d'un token d'activation de compte
+                    $activationToken = Utility::generateActivationToken();
+                    var_dump("Le token d'activation est : " . $activationToken);
 
                     // Validation de l'activation par email
                     $isValid = true;
 
-                    // Génération du rôle de l'utilisateur
+                    // Génération du rôle de l'utilisateur par défaut
                     $role = "ROLE_USER";
 
                     // Génération de la date de création du compte
-                    $createdAt = "Date du jour";
+                    $createdAt = Utility::generateDate();
 
                     // Instanciation et hydratation d'un nouvel objet User ...
                     $user = new User(
@@ -169,7 +168,6 @@ class HomeController extends MainController
                 // Affichage d'un message d'erreur si le formulaire est incomplet
                 die("Le formulaire n'est pas complet");
             }
-        }
-        
+        } 
     }
 }

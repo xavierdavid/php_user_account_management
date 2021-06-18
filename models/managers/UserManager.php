@@ -37,7 +37,7 @@ class UserManager extends Model
         $stmt->bindValue(":password", $user->getPassword(), PDO::PARAM_STR);
         $stmt->bindValue(":slug", $user->getSlug(), PDO::PARAM_STR);
         $stmt->bindValue(":cover_image", $user->getCoverImage(), PDO::PARAM_STR);
-        $stmt->bindValue(":activation_token", $user->getActivationToken(), PDO::PARAM_INT);
+        $stmt->bindValue(":activation_token", $user->getActivationToken(), PDO::PARAM_STR);
         $stmt->bindValue(":is_valid", $user->getIsValid(), PDO::PARAM_INT);
         $stmt->bindValue(":role", $user->getRole(), PDO::PARAM_STR);
         $stmt->bindValue(":created_at", $user->getCreatedAt(), PDO::PARAM_STR);
