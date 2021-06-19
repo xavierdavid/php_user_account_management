@@ -31,8 +31,8 @@
         if(!empty($_SESSION['alert'])) {
             // On parcourt le tableau de la session alertes 
             foreach($_SESSION['alert'] as $alert) { ?>
-                <div class="<?= $alert['type']; ?>" role="alert">
-                    <p><?= $alert['message']; ?></p>
+                <div class="alert <?= $alert['type']; ?>" role="alert">
+                    <?= $alert['message']; ?>
                 </div>
             <?php  
             } 

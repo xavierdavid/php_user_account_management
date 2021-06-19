@@ -5,7 +5,7 @@ namespace App\Services;
  
 class Utility {
 
-    // Définition de constantes de classe pour gérer les alertes 
+    // Définition de constantes de classe pour gérer les types d'alertes 
     public const DANGER_MESSAGE = "alert-danger";
     public const WARNING_MESSAGE = "alert-warning";
     public const SUCCESS_MESSAGE = "alert-success";
@@ -32,7 +32,7 @@ class Utility {
      * @param string $url
      * @return void
      */
-    public function redirect(string $url): void
+    public static function redirect(string $url): void
     {
         header("Location: $url");
         exit();

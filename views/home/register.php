@@ -48,9 +48,9 @@
                         
                 <div class="form-link">
                     <!-- Lien vers la route du formulaire de mot de passe oublié -->
-                    <p><a href="#"><i class="fas fa-question"></i> Mot de passe oublié...</a></p>
+                    <!-- <p><a href="#"><i class="fas fa-question"></i> Mot de passe oublié...</a></p> -->
                     <!-- Lien vers la route du formulaire d'inscription -->
-                    <p><a href="#"><i class="far fa-arrow-alt-circle-right"></i></i> S'inscrire</a></p>
+                    <!-- <p><a href="#"><i class="far fa-arrow-alt-circle-right"></i> S'inscrire</a></p> -->
                 </div>
                     
                 <!-- Bouton de validation du formulaire -->

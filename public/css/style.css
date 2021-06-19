@@ -23,8 +23,13 @@
     --color-danger: #df0d37;
     --color-warning: #b36506;
     --color-success: #2c8d2c;
+    --color-info:#034e6e;
     --color-white: #f1f1f1;
     --color-grey: #d6d1d1;
+    --background-danger: #e6cdca;
+    --background-warning: #f3cd9e;
+    --background-success: #b6d3b6;
+    --background-info: #85a8b8;
 }
 
 
@@ -186,29 +191,6 @@ input:focus {
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
-.message-alert {
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    padding: 20px;
-}
-
-.alert-danger {
-    color: var(--color-danger);
-}
-
-.alert-success {
-    color: var(--color-success);
-}
-
-.alert-warning {
-    color: var(--color-warning);
-}
-
-.alert-info {
-    color: var(--color-title);
-}
-
 .form-button {
     display: flex;
     flex-direction: row;
@@ -251,6 +233,41 @@ input:focus {
 .form-link i {
     color: var(--color-secondary);
     margin-right: 5px;
+}
+
+/*****************************************************/
+/***                    Alertes                    ***/
+/*****************************************************/
+.alert {
+    width: 70%;
+    margin: auto;
+    margin-top: 100px;
+    padding: 20px;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 10px;
+}
+
+.alert-danger {
+    color: var(--color-danger);
+    background: var(--background-danger);
+}
+
+.alert-warning {
+    color: var(--color-warning);
+    background: var(--background-warning);
+}
+
+.alert-success {
+    color: var(--color-success);
+    background: var(--background-success);
+}
+
+.alert-info {
+    color: var(--color-info);
+    background: var(--background-info);
 }
 
 /*****************************************************/
@@ -576,7 +593,6 @@ nav {
 .user-profile span img {
     width: 60px;
 }
-
 
 /* Cartes des options utilisateurs */
 .user-features {

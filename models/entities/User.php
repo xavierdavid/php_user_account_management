@@ -363,6 +363,6 @@ class User
     public function isUserValid(): bool
     {
         // Retourne 'true' si les informations requises suivantes ne sont pas vides
-        return !(empty($this->email) || empty($this->password) || empty($this->firstName) || empty($this->lastName));
+        return !(empty($this->firstName) || empty($this->lastName) || empty($this->address) || empty($this->postal) || empty($this->city) || empty($this->country) || empty($this->email) || empty($this->password) || empty($this->password));
     }
 } 

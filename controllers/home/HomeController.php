@@ -101,7 +101,7 @@ class HomeController extends MainController
                     $email = strip_tags($_POST['email']);
                     $password = strip_tags($_POST['password']);
                     $password_confirm = strip_tags($_POST['password_confirm']);
-
+                    
                     // Si l'email renseigné n'est pas de type email
                     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         // Affichage d'un message d'erreur
@@ -110,8 +110,14 @@ class HomeController extends MainController
 
                     // Si le mot de passe confirmé n'est pas identique au mot de passe 
                     if($password_confirm !== $password) {
-                        die("Les deux mots de passe saisis ne sont pas identiques");
+                        // Affichage d'un message d'alerte 
+                        Utility::addAlertMessage("Les deux mots de passe ne sont pas identiques !", Utility::WARNING_MESSAGE);
+                        // Redirection de l'utilisateur vers la page d'inscription
+                        Utility::redirect(URL."inscription");
                     }
+
+                    // Si l'email de l'utilisateur existe déjà dans la base de données
+
 
                     // Hachage du mot de passe
                     $hashPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -159,14 +165,21 @@ class HomeController extends MainController
                     if($user->isUserValid()) {
                         // Alors on envoie les données de l'utilisateur en base de données à l'aide du UserManager
                         $this->userManager->new($user);
-                        echo "L'utilisateur a bien été enregistré !";
+
+                        // On affiche un message d'alerte de succès
+                        Utility::addAlertMessage("Votre compte a été créé avec succès !", Utility::SUCCESS_MESSAGE);
+                        // Redirection de l'utilisateur vers la page de profil
+                        Utility::redirect(URL."accueil");
+
                     } else {
                         echo "L'utilisateur n'est pas valide";
                     }
   
             } else {
-                // Affichage d'un message d'erreur si le formulaire est incomplet
-                die("Le formulaire n'est pas complet");
+                // Affichage d'un message d'alerte si le formulaire est incomplet
+                Utility::addAlertMessage("Le formulaire est incomplet. Les champs requis sont obligatoires !", Utility::DANGER_MESSAGE);
+                // Redirection de l'utilisateur vers la page d'inscription
+                Utility::redirect(URL."inscription");
             }
         } 
     }
