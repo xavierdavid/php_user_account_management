@@ -173,6 +173,16 @@ label {
     color: var(--color-secondary);
 }
 
+label span {
+    color: var(--color-danger);
+}
+
+.form-error {
+    color: var(--color-danger);
+    font-size: 12px;
+    margin-left: 25px
+}
+
 input {
     display: block;
     width: 400px;

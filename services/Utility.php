@@ -26,6 +26,17 @@ class Utility {
         ];
     }
 
+    /**
+     * Permet de stocker le tableau d'erreurs d'une entité dans la session
+     *
+     * @param [type] $errors
+     * @return void
+     */
+    public static function addFormErrorsIntoSession($errors) {
+        // Ajout du tableau des erreurs de validation d'une entité à la session
+        $_SESSION['errors'] = $errors;
+    }
+
      /**
      * Permet de générer une redirection vers une url spécifique
      *

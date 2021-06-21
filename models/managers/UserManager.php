@@ -23,8 +23,7 @@ class UserManager extends Model
         ";
         // Connexion à la base de données et préparation d'une requête
         $stmt = $this->getDataBase()->prepare($req);
-        // On établit la correspondance entre 
-       /*  $stmt->bindValue(":id", $user->getId(), PDO::PARAM_INT); */
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
         $stmt->bindValue(":first_name", $user->getFirstName(), PDO::PARAM_STR);
         $stmt->bindValue(":last_name", $user->getLastName(), PDO::PARAM_STR);
         $stmt->bindValue(":address", $user->getAddress(), PDO::PARAM_STR);

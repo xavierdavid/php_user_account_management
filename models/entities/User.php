@@ -24,15 +24,15 @@ class User
     private $errors=[]; // Attribut spécifique stockant les éventuelles erreurs dans un tableau
 
     // Constantes de classe
-    const INVALID_PHONE = 1;
-    const INVALID_POSTAL = 2;
-    const INVALID_EMAIL = 3;
-    const INVALID_FIRSTNAME = 4;
-    const INVALID_LASTNAME = 5;
-    const INVALID_ADDRESS = 6;
-    const INVALID_CITY = 7;
-    const INVALID_COUNTRY = 8;
-    const INVALID_PASSWORD = 9;
+    const INVALID_FIRSTNAME = "INVALID_FIRSTNAME";
+    const INVALID_LASTNAME = "INVALID_LASTNAME";
+    const INVALID_ADDRESS = "INVALID_ADDRESS";
+    const INVALID_PHONE = "INVALID_PHONE";
+    const INVALID_POSTAL = "INVALID_POSTAL";
+    const INVALID_CITY = "INVALID_CITY";
+    const INVALID_COUNTRY = "INVALID_COUNTRY";
+    const INVALID_EMAIL = "INVALID_EMAIL";
+    const INVALID_PASSWORD = "INVALID_PASSWORD";
 
    /**
     * Constructeur de la classe User
@@ -94,9 +94,9 @@ class User
     public function setFirstName(string $firstName)
     {
         // Si le prénom est vide ou si ce n'est pas une chaîne d'au moins 3 caractères
-        if(empty($firstName) || (!is_string($firstName) && strlen($firstName) <= 3)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_FIRSTNAME;
+        if(empty($firstName) || !is_string($firstName) || strlen($firstName) <= 3) {
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_FIRSTNAME;
         } else {
             // Sinon on affecte la valeur $firstName à l'attribut de l'objet en cours
             // Contrôle de validité - $firstName doit être une chaîne
@@ -113,9 +113,9 @@ class User
     public function setLastName(string $lastName)
     {
         // Si le nom est vide ou si ce n'est pas une chaîne d'au moins 2 caractères
-        if(empty($lastName) || (!is_string($lastName) && strlen($lastName) <= 2)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_LASTNAME;
+        if(empty($lastName) || !is_string($lastName) || strlen($lastName) <= 2) {
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_LASTNAME;
         } else {
             // Sinon on affecte la valeur $lastName à l'attribut de l'objet en cours
             // Contrôle de validité - $lastName doit être une chaîne
@@ -133,8 +133,8 @@ class User
     {
         // Si le nom est vide ou si ce n'est pas une chaîne de caractères
         if(empty($address) || !is_string($address)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_ADDRESS;
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_ADDRESS;
         } else {
             // Sinon on affecte la valeur $address à l'attribut de l'objet en cours
             // Contrôle de validité - $address doit être une chaîne
@@ -152,14 +152,14 @@ class User
     {
         // Si le téléphone est vide ou s'il n'est pas conforme à l'expression régulière 
         if(empty($phone) || !preg_match('#^0[1-68][0-9]{8}$#', $phone)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_PHONE;
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_PHONE;
         } else {
             // Sinon on affecte la valeur $phone à l'attribut de l'objet en cours
             // Contrôle de validité - $phone doit être une chaîne
             $this->phone = (string) $phone;
-            return $this;
-        } 
+            return $this; 
+        }
     }
 
     public function getPostal()
@@ -171,8 +171,8 @@ class User
     {
         // Si le nom est vide ou ou s'il n'est pas conforme à l'expression régulière
         if(empty($postal) || !preg_match('#^(([0-8][0-9])|(9[0-5])|(2[ab]))[0-9]{3}$#', $postal)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_POSTAL;
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_POSTAL;
         } else {
             // Sinon on affecte la valeur $postal à l'attribut de l'objet en cours
             // Contrôle de validité - $postal doit être une chaîne
@@ -190,8 +190,8 @@ class User
     {
         // Si la ville est vide ou si ce n'est pas une chaîne de caractères
         if(empty($city) || !is_string($city)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_CITY;
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_CITY;
         } else {
             // Sinon on affecte la valeur $city à l'attribut de l'objet en cours
             // Contrôle de validité - $city doit être une chaîne
@@ -209,8 +209,8 @@ class User
     {
         // Si le pays est vide ou s'il' ce n'est pas une chaîne de caractères
         if(empty($country) || !is_string($country)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_COUNTRY;
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_COUNTRY;
         } else {
             // Sinon on affecte la valeur $country à l'attribut de l'objet en cours
             // Contrôle de validité - $country doit être une chaîne
@@ -241,8 +241,8 @@ class User
     {
         // Si l'email est vide ou s'il ne correspond pas au type 'email'
         if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
-             // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-             $this->error[] = self::INVALID_EMAIL;
+             // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+             $this->errors[] = self::INVALID_EMAIL;
         } else {
             $this->email = (string) $email;
             return $this;
@@ -258,8 +258,8 @@ class User
     {
         // Si le mot de passe est vide ou si ce n'est pas une chaîne de caractères
         if(empty($password) || !is_string($password)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_PASSWORD;
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_PASSWORD;
         } else {
             // Sinon on affecte la valeur $password à l'attribut de l'objet en cours
             // Contrôle de validité - $password doit être une chaîne
@@ -276,8 +276,8 @@ class User
     {
         // Si le mot de passe est vide ou si ce n'est pas une chaîne de caractères
         if(empty($slug) || !is_string($slug)) {
-            // Alors on affecte une erreur à l'attribut $error (tableau des erreurs)
-            $this->error[] = self::INVALID_PASSWORD;
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_PASSWORD;
         } else {
             // Sinon on affecte la valeur $slug à l'attribut de l'objet en cours
             // Contrôle de validité - $slug doit être une chaîne
@@ -363,6 +363,6 @@ class User
     public function isUserValid(): bool
     {
         // Retourne 'true' si les informations requises suivantes ne sont pas vides
-        return !(empty($this->firstName) || empty($this->lastName) || empty($this->address) || empty($this->postal) || empty($this->city) || empty($this->country) || empty($this->email) || empty($this->password) || empty($this->password));
+        return !(empty($this->firstName) || empty($this->lastName) || empty($this->address) || empty($this->phone) || empty($this->postal) || empty($this->city) || empty($this->country) || empty($this->email) || empty($this->password) || empty($this->password));
     }
 } 
