@@ -89,13 +89,13 @@ class HomeController extends MainController
             && !empty($_POST['password'])
             && !empty($_POST['password_confirm'])) {
 
-                // Récupération et sécurisation des données
+                // Récupération, formatage et sécurisation des données du formulaire
                 $firstName = strip_tags($_POST['first_name']);
-                $lastName = strip_tags($_POST['last_name']);
+                $lastName = strip_tags(strtoupper($_POST['last_name']));
                 $address = strip_tags($_POST['address']);
                 $postal = strip_tags($_POST['postal']);
-                $city = strip_tags($_POST['city']);
-                $country = strip_tags($_POST['country']);
+                $city = strip_tags(strtoupper($_POST['city']));
+                $country = strip_tags(strtoupper($_POST['country']));
                 $coverImage = strip_tags($_POST['cover_image']);
                 $phone = strip_tags($_POST['phone']);
                 $email = strip_tags($_POST['email']);
@@ -121,36 +121,43 @@ class HomeController extends MainController
                 // Génération de la date de création du compte
                 $createdAt = Utility::generateDate();
 
-                // Instanciation et hydratation d'un nouvel objet User ...
-                $user = new User(
-                    // ... A partir du tableau associatif des données utilisateurs renseignées dans le formulaire d'inscription
-                    [
-                        'firstName' => $firstName,
-                        'lastName' => $lastName,
-                        'address' => $address,
-                        'postal' => $postal,
-                        'city' => $city,
-                        'country' => $country,
-                        'coverImage' => $coverImage,
-                        'phone' => $phone,
-                        'email' => $email,
-                        'password' => $hashPassword,
-                        'slug' => $slug,
-                        'activationToken' => $activationToken,
-                        'isValid' => $isValid,
-                        'role' => $role,
-                        'createdAt' => $createdAt
-                    ]
-                );
+                // Stockage des données de l'utilisateur dans un tableau associatif $userData
+                $userData = [
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                    'address' => $address,
+                    'postal' => $postal,
+                    'city' => $city,
+                    'country' => $country,
+                    'coverImage' => $coverImage,
+                    'phone' => $phone,
+                    'email' => $email,
+                    'password' => $hashPassword,
+                    'slug' => $slug,
+                    'activationToken' => $activationToken,
+                    'isValid' => $isValid,
+                    'role' => $role,
+                    'createdAt' => $createdAt
+                ];
 
-                // Si le nouvel objet User instancié n'est pas valide ou que les deux mots de passe ne sont pas identiques
-                if(!$user->isUserValid() || $password_confirm !== $password) {
-                    // On crée un tableau d'erreur errorConfirmPassword
+                // Stockage temporaire des données de l'utilisateur dans la session pour pré-remplir le formulaire en cas d'erreur
+                $_SESSION['registrationUserData'] = $userData;
+
+                // Instanciation et hydratation d'un nouvel objet User à partir du tableau associatif des données utilisateurs $userData
+                $user = new User($userData);
+
+                // Si les deux mots de passe ne sont pas identiques
+                if($password_confirm !== $password) {
+                    // On crée un tableau d'erreur $errorConfirmPassword
                     $errorConfirmPassword = [
                         'invalid_confirm_password' => "INVALID_CONFIRM_PASSWORD"
                     ];
-                    // On insère le tableau d'erreur errorConfirmPassword dans la session
+                    // On insère le tableau d'erreur $errorConfirmPassword dans la session
                     $_SESSION['errorConfirmPassword'] = $errorConfirmPassword;
+                }
+
+                // Si le nouvel objet User instancié n'est pas valide ou que les deux mots de passe ne sont pas identiques
+                if(!$user->isUserValid() || $password_confirm !== $password) {
                     // On récupère les erreurs de validation de l'entité User
                     $errors = $user->getErrors();
                     // On stocke le tableau des erreurs d'entité dans la session

@@ -94,7 +94,7 @@ class User
     public function setFirstName(string $firstName)
     {
         // Si le prénom est vide ou si ce n'est pas une chaîne d'au moins 3 caractères
-        if(empty($firstName) || !is_string($firstName) || strlen($firstName) <= 3) {
+        if(empty($firstName) || !is_string($firstName) || strlen($firstName) < 3) {
             // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
             $this->errors[] = self::INVALID_FIRSTNAME;
         } else {
@@ -113,7 +113,7 @@ class User
     public function setLastName(string $lastName)
     {
         // Si le nom est vide ou si ce n'est pas une chaîne d'au moins 2 caractères
-        if(empty($lastName) || !is_string($lastName) || strlen($lastName) <= 2) {
+        if(empty($lastName) || !is_string($lastName) || strlen($lastName) < 2) {
             // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
             $this->errors[] = self::INVALID_LASTNAME;
         } else {
