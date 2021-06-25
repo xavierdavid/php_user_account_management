@@ -41,8 +41,32 @@ class UserManager extends Model
         $stmt->bindValue(":role", $user->getRole(), PDO::PARAM_STR);
         $stmt->bindValue(":created_at", $user->getCreatedAt(), PDO::PARAM_STR);
         // On exécute la requête 
-        $resultat = $stmt->execute();
+        $stmt->execute();
         // On clôture la requête
         $stmt->closeCursor();
+    }
+
+    /**
+     * Permet de vérifier si l'email d'un utilisateur est présent en base de données
+     *
+     * @param [type] $email
+     * @return boolean
+     */
+    public function isUserEmailExist($email)
+    {
+        // Définition de la requête
+        $req = "SELECT * FROM user WHERE email = :email";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+        // On exécute la requête 
+        $stmt->execute();
+        // On récupère le résultat
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        // On clôture la requête
+        $stmt->closeCursor();
+        // Retourne 'true' si le résultat n'est pas vide
+        return !empty($result);
     }
 }

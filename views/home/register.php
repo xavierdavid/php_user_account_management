@@ -108,7 +108,7 @@
                 <input type="text" name="cover_image" id="cover_image" placeholder="Votre photo de profil">
 
                 <!-- champ téléphone -->
-                <label for="phone">Téléphone</label>
+                <label for="phone">Téléphone <span>*</span></label>
                     <!-- Affichage des erreurs du champ téléphone -->
                     <?php 
                     if(!empty($_SESSION['errors'])) {
@@ -131,6 +131,11 @@
                         if(in_array("INVALID_EMAIL", $_SESSION['errors'])) {
                             ?> <div class="form-error">L'email est invalide</div>
                         <?php } 
+                    }
+                    if(!empty($_SESSION['errorEmailUserExist'])) {
+                        if(in_array("EMAIL_USER_EXIST", $_SESSION['errorEmailUserExist'])) {
+                            ?> <div class="form-error">L'email n'est pas disponible</div>
+                        <?php }
                     } ?>
                 <input type="email" name="email" id="email" placeholder="Veuillez saisir votre email" required
                 value="<?php if(!empty($_SESSION['registrationUserData'])){
@@ -171,13 +176,6 @@
                     <button class="button button-info" type="submit">S'inscrire</button>
                 </div>
             </div>
-
-            <?php
-                // Suppression des variables de la session
-                unset($_SESSION['errors']); 
-                unset($_SESSION['errorConfirmPassword']);
-                unset($_SESSION['registrationUserData']);
-            ?>
         </div>
     </form>
 </section>

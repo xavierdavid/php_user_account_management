@@ -102,6 +102,16 @@ class HomeController extends MainController
                 $password = strip_tags($_POST['password']);
                 $password_confirm = strip_tags($_POST['password_confirm']);
 
+                // Si l'email saisi existe déjà dans la base de données 
+                if($this->userManager->isUserEmailExist($email)) {
+                    // On crée un tableau d'erreur $errorEmailUserExist
+                    $errorEmailUserExist = [
+                        'email_user_exist' => "EMAIL_USER_EXIST"
+                    ];
+                    // On insère le tableau d'erreur $errorEmailUserExist dans la session
+                    $_SESSION['errorEmailUserExist'] = $errorEmailUserExist;  
+                } 
+        
                 // Hachage du mot de passe
                 $hashPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -156,8 +166,8 @@ class HomeController extends MainController
                     $_SESSION['errorConfirmPassword'] = $errorConfirmPassword;
                 }
 
-                // Si le nouvel objet User instancié n'est pas valide ou que les deux mots de passe ne sont pas identiques
-                if(!$user->isUserValid() || $password_confirm !== $password) {
+                // Si le nouvel objet User instancié n'est pas valide ou que les deux mots de passe ne sont pas identiques ou que l'email est déjà utilisé
+                if(!$user->isUserValid() || $password_confirm !== $password || $this->userManager->isUserEmailExist($email)) {
                     // On récupère les erreurs de validation de l'entité User
                     $errors = $user->getErrors();
                     // On stocke le tableau des erreurs d'entité dans la session
@@ -170,14 +180,19 @@ class HomeController extends MainController
                     // Sinon on envoie les données de l'utilisateur en base de données à l'aide du UserManager
                     $this->userManager->new($user);
                     // On affiche un message d'alerte de succès
-                    Utility::addAlertMessage("Votre compte a été créé avec succès !", Utility::SUCCESS_MESSAGE);
+                    Utility::addAlertMessage("Votre compte a été créé avec succès ! Un mail vient d'être envoyé à l'adresse " . $user->getEmail() ." pour valider votre inscription.", Utility::SUCCESS_MESSAGE);
+                    // Suppression des variables de session
+                    unset($_SESSION['errors']); 
+                    unset($_SESSION['errorConfirmPassword']);
+                    unset($_SESSION['registrationUserData']);
+                    unset($_SESSION['errorEmailUserExist']);
                     // Redirection de l'utilisateur vers la page de profil
                     Utility::redirect(URL."accueil");
                 }
             } else {
                 // Affichage d'un message d'alerte si le formulaire est incomplet
                 Utility::addAlertMessage("Le formulaire est incomplet. Les champs requis sont obligatoires !", Utility::DANGER_MESSAGE);
-                 // Redirection de l'utilisateur vers la page d'inscription
+                // Redirection de l'utilisateur vers la page d'inscription
                 Utility::redirect(URL."inscription");
             }
         }
