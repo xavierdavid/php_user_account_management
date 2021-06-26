@@ -42,8 +42,12 @@ class UserManager extends Model
         $stmt->bindValue(":created_at", $user->getCreatedAt(), PDO::PARAM_STR);
         // On exécute la requête 
         $stmt->execute();
+        // On vérifie si la requête a abouti
+        $isRequestSuccess = $stmt->rowCount() > 0;
         // On clôture la requête
         $stmt->closeCursor();
+        // On retourne le statut de la requête
+        return $isRequestSuccess;
     }
 
     /**

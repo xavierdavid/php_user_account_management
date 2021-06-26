@@ -299,7 +299,7 @@ class User
             // Contrôle de validité - $activationToken doit être une châine
             $this->activationToken = (string) $activationToken;
             return $this;
-        };
+        }
     }
 
     public function getIsValid()
@@ -307,15 +307,15 @@ class User
         return $this->isValid;
     }
 
-    public function setIsValid(bool $isValid)
+    public function setIsValid(int $isValid)
     {
-        // Si le booléen de validation n'est pas vide
-        if(!empty($isValid)) {
+        // Si $isValid est définie (peut être nulle)
+        if(isset($isValid)) {
             // Alors on affecte la valeur $isValid à l'attribut de l'objet en cours
             // Contrôle de validité - $isValid doit être un entier
-            $this->isValid = (bool) $isValid;
+            $this->isValid = (int) $isValid;
             return $this;
-        };
+        }
     }
 
     public function getRole()
@@ -331,7 +331,7 @@ class User
             // Contrôle de validité - $role doit être un entier
             $this->role = (string) $role;
             return $this;
-        };
+        }
     }
 
     public function getCreatedAt()
@@ -347,7 +347,7 @@ class User
             // Contrôle de validité - $createdAt doit être un entier
             $this->createdAt = (string) $createdAt;
             return $this;
-        };
+        }
     }
    
     public function getErrors()
@@ -363,6 +363,6 @@ class User
     public function isUserValid(): bool
     {
         // Retourne 'true' si les informations requises suivantes ne sont pas vides
-        return !(empty($this->firstName) || empty($this->lastName) || empty($this->address) || empty($this->phone) || empty($this->postal) || empty($this->city) || empty($this->country) || empty($this->email) || empty($this->password) || empty($this->password));
+        return !(empty($this->firstName) || empty($this->lastName) || empty($this->address) || empty($this->phone) || empty($this->postal) || empty($this->city) || empty($this->country) || empty($this->email) || empty($this->password));
     }
 } 

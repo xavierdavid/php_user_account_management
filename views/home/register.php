@@ -15,12 +15,7 @@
                             ?> <div class="form-error">Le prénom est invalide. Il doit comporter au moins 3 caractères</div>
                         <?php }                                     
                     } ?>
-                <input type="text" name="first_name" id="first_name" placeholder="Veuillez saisir votre prénom" required 
-                value="<?php if(!empty($_SESSION['registrationUserData'])){
-                                if(in_array("firstName", $_SESSION['registrationUserData'])){
-                                    echo ($_SESSION['registrationUserData']['firstName']);
-                                }
-                            }?>">
+                <input type="text" name="first_name" id="first_name" placeholder="Veuillez saisir votre prénom" required value="<?php if(isset($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['firstName']);}?>">
     
                 <!-- champ nom -->      
                 <label for="last_name">Nom <span>*</span></label>
@@ -30,12 +25,7 @@
                             ?> <div class="form-error">Le nom est invalide. Il doit comporter au moins 2 caractères</div>
                         <?php } 
                     } ?>
-                <input type="text" name="last_name" id="last_name" placeholder="Veuillez saisir votre nom" required 
-                value="<?php if(!empty($_SESSION['registrationUserData'])){
-                                if(in_array("lastName", $_SESSION['registrationUserData'])){
-                                    echo ($_SESSION['registrationUserData']['lastName']);
-                                }
-                            }?>">
+                <input type="text" name="last_name" id="last_name" placeholder="Veuillez saisir votre nom" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['lastName']);}?>">
 
                 <!-- champ adresse -->
                 <label for="address">Adresse <span>*</span></label>
@@ -46,12 +36,7 @@
                             ?> <div class="form-error">L'adresse est invalide</div>
                         <?php } 
                     } ?>
-                <input type="text" name="address" id="address" placeholder="Veuillez saisir votre adresse" required
-                value="<?php if(!empty($_SESSION['registrationUserData'])){
-                                if(in_array("address", $_SESSION['registrationUserData'])){
-                                    echo ($_SESSION['registrationUserData']['address']);
-                                }
-                            }?>">
+                <input type="text" name="address" id="address" placeholder="Veuillez saisir votre adresse" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['address']);}?>">
 
                 <!-- champ code postal -->
                 <label for="postal">Code postal <span>*</span></label>
@@ -62,12 +47,7 @@
                             ?> <div class="form-error">Le code postal est invalide</div>
                         <?php }
                     } ?>
-                <input type="text" name="postal" id="postal" placeholder="Veuillez saisir votre code postal" required
-                value="<?php if(!empty($_SESSION['registrationUserData'])){
-                                if(in_array("postal", $_SESSION['registrationUserData'])){
-                                    echo ($_SESSION['registrationUserData']['postal']);
-                                }
-                            }?>">
+                <input type="text" name="postal" id="postal" placeholder="Veuillez saisir votre code postal" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['postal']);}?>">
 
                 <!-- champ ville -->
                 <label for="city">Ville <span>*</span></label>
@@ -78,12 +58,7 @@
                             ?> <div class="form-error">La ville est invalide</div>
                         <?php }
                     } ?>
-                <input type="text" name="city" id="city" placeholder="Veuillez saisir votre ville" required
-                value="<?php if(!empty($_SESSION['registrationUserData'])){
-                                if(in_array("city", $_SESSION['registrationUserData'])){
-                                    echo ($_SESSION['registrationUserData']['city']);
-                                }
-                            }?>">
+                <input type="text" name="city" id="city" placeholder="Veuillez saisir votre ville" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['city']);}?>">
 
                 <!-- champ pays -->
                 <label for="country">Pays <span>*</span></label>
@@ -94,12 +69,7 @@
                             ?> <div class="form-error">Le pays est invalide</div>
                         <?php }
                     } ?>
-                <input type="text" name="country" id="country" placeholder="Veuillez saisir votre pays" required
-                value="<?php if(!empty($_SESSION['registrationUserData'])){
-                                if(in_array("country", $_SESSION['registrationUserData'])){
-                                    echo ($_SESSION['registrationUserData']['country']);
-                                }
-                            }?>">
+                <input type="text" name="country" id="country" placeholder="Veuillez saisir votre pays" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['country']);}?>">
             </div>
 
             <div class="input-section-aside">
@@ -116,12 +86,7 @@
                             ?> <div class="form-error">Le téléphone est invalide</div>
                         <?php }
                     } ?>
-                <input type="text" name="phone" id="phone" placeholder="Votre numéro de téléphone"
-                value="<?php if(!empty($_SESSION['registrationUserData'])){
-                                if(in_array("phone", $_SESSION['registrationUserData'])){
-                                    echo ($_SESSION['registrationUserData']['phone']);
-                                }
-                            }?>">
+                <input type="text" name="phone" id="phone" placeholder="Votre numéro de téléphone" value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['phone']);}?>">
                    
                 <!-- champ email -->
                 <label for="email">Email <span>*</span></label>
@@ -137,12 +102,7 @@
                             ?> <div class="form-error">L'email n'est pas disponible</div>
                         <?php }
                     } ?>
-                <input type="email" name="email" id="email" placeholder="Veuillez saisir votre email" required
-                value="<?php if(!empty($_SESSION['registrationUserData'])){
-                                if(in_array("email", $_SESSION['registrationUserData'])){
-                                    echo ($_SESSION['registrationUserData']['email']);
-                                }
-                            }?>">
+                <input type="email" name="email" id="email" placeholder="Veuillez saisir votre email" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['email']);}?>">
 
 
                 <!-- champ mot de passe -->
@@ -175,6 +135,14 @@
                 <div class="form-button">
                     <button class="button button-info" type="submit">S'inscrire</button>
                 </div>
+
+                <?php
+                    // Suppression des variables de session
+                    unset($_SESSION['errors']); 
+                    unset($_SESSION['errorConfirmPassword']);
+                    unset($_SESSION['registrationUserData']);
+                    unset($_SESSION['errorEmailUserExist']);
+                ?>
             </div>
         </div>
     </form>

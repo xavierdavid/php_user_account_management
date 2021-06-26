@@ -5,6 +5,7 @@ namespace App\Controllers\Home;
 
 // Utilisation des classes
 use App\Services\Utility;
+use App\Services\Mail;
 use App\Models\Entities\User;
 use App\Controllers\MainController;
 use App\Models\Managers\UserManager;
@@ -122,8 +123,8 @@ class HomeController extends MainController
                 // Génération d'un token d'activation de compte
                 $activationToken = Utility::generateActivationToken();
 
-                // Validation de l'activation par email
-                $isValid = true;
+                // Statut de l'activation par email (0 par défaut)
+                $isValid = 0;
 
                 // Génération du rôle de l'utilisateur par défaut
                 $role = "ROLE_USER";
@@ -177,17 +178,21 @@ class HomeController extends MainController
                     // On redirige l'utilisateur vers la page d'inscription
                     Utility::redirect(URL."inscription");    
                 } else {
-                    // Sinon on envoie les données de l'utilisateur en base de données à l'aide du UserManager
-                    $this->userManager->new($user);
-                    // On affiche un message d'alerte de succès
-                    Utility::addAlertMessage("Votre compte a été créé avec succès ! Un mail vient d'être envoyé à l'adresse " . $user->getEmail() ." pour valider votre inscription.", Utility::SUCCESS_MESSAGE);
-                    // Suppression des variables de session
-                    unset($_SESSION['errors']); 
-                    unset($_SESSION['errorConfirmPassword']);
-                    unset($_SESSION['registrationUserData']);
-                    unset($_SESSION['errorEmailUserExist']);
-                    // Redirection de l'utilisateur vers la page de profil
-                    Utility::redirect(URL."accueil");
+                    // Sinon on envoie les données de l'utilisateur en base de données à l'aide du UserManager en vérifiant que la requête a bien abouti
+                    if($this->userManager->new($user)) {
+                        // On affiche un message d'alerte de succès
+                        Utility::addAlertMessage("Votre compte a été créé avec succès ! Un mail vient d'être envoyé à l'adresse " . $user->getEmail() ." pour valider votre inscription.", Utility::SUCCESS_MESSAGE);
+                        // On envoie un email d'activation de compte à l'utilisateur à partir de ses informations
+                        Mail::userActivationMail($user);
+                        
+                        // On redirige l'utilisateur vers la page de login
+                        Utility::redirect(URL."accueil");
+                    } else {
+                        // On affiche un message d'alerte à l'utilisateur
+                        Utility::addAlertMessage("Erreur lors de la création de votre compte utilisateur !", Utility::DANGER_MESSAGE);
+                        // On redirige l'utilisateur vers la page d'inscription
+                        Utility::redirect(URL."inscription"); 
+                    }
                 }
             } else {
                 // Affichage d'un message d'alerte si le formulaire est incomplet
