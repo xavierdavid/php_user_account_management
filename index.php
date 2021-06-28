@@ -39,6 +39,8 @@ try {
             break;
         case "validation_inscription" : $homeController->register_validation();
             break;
+        case "activation_compte" : echo "Activation du compte utilisateur";
+            break;
         case "compte" :
             // On teste le 2ème élément de l'url
             switch ($url[1]) {
