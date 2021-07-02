@@ -2,8 +2,9 @@
 
 // Utilisation de l'Autoloader associé au namespace App
 use App\Autoloader;
-// Utilisation du HomeController associé au namespace 'Home' Controllers
+// Utilisation des contrôleurs
 use App\Controllers\Home\HomeController; 
+use App\Controllers\Account\AccountController;
 
 // Démarrage de la session
 session_start();
@@ -12,8 +13,9 @@ session_start();
 require_once 'Autoloader.php';
 Autoloader::register();
 
-// Instanciation du HomeController
+// Instanciation des contrôleurs
 $homeController = new HomeController;
+$accountController = new AccountController;
 
 // Définition d'une constante d'URL contenant le chemin absolu du site
 define("URL", str_replace("index.php","",(isset($_SERVER['HTTPS']) ? "https" : "http")."://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
@@ -39,7 +41,7 @@ try {
             break;
         case "validation_inscription" : $homeController->register_validation();
             break;
-        case "activation_compte" : echo "Activation du compte utilisateur";
+        case "activation_compte" : $accountController->account_activation($url[1], $url[2]);
             break;
         case "compte" :
             // On teste le 2ème élément de l'url

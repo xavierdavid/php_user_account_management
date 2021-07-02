@@ -3,14 +3,12 @@
 namespace App\Services;
 
 use App\Services\Utility;
-use App\Models\Entities\User;
 use App\Vendor\PHPMailer\Exception;
 use App\Vendor\PHPMailer\PHPMailer;
 use App\Vendor\PHPMailer\SMTP;
 
 class Mail
 {
-    
     /**
      * Permet d'envoyer une url d'activation de compte par mail à l'utilisateur en cours
      *
@@ -27,7 +25,7 @@ class Mail
         // On définit le sujet du mail
         $subject = "Activation du compte de ". $user->getFirstName() . " " . $user->getLastName();
         // On génère le message
-        $message = "<h1>Bienvenue sur notre site !</h1><br><p>Nous vous remercions de bien vouloir cliquer sur le lien ci-après afin de pouvoir activer votre compte : "."<strong>".$userActivationUrl."</strong></p>";
+        $message = "<h1>Bienvenue sur notre site !</h1><br><p>Nous vous remercions de bien vouloir cliquer sur le lien ci-après afin de pouvoir activer votre compte : <strong><a href='".$userActivationUrl."'>Activer mon compte maintenant !</a></strong></p>";
         // On récupère l'email de l'utilisateur en cours
         $userMail = $user->getEmail();
         
@@ -53,8 +51,8 @@ class Mail
             // On envoie le mail
             $mail->send();
 
-            // On génère un message d'alerte de succès à l'utilisateur
-            Utility::addAlertMessage("Mail envoyé !", Utility::SUCCESS_MESSAGE);
+            // On génère un message d'alerte d'information à l'utilisateur
+            Utility::addAlertMessage("Mail envoyé !", Utility::INFO_MESSAGE);
 
         } catch (Exception $e) {
             // On génère un message d'alerte d'échec à l'utilisateur

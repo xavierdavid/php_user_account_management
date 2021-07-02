@@ -73,4 +73,34 @@ class UserManager extends Model
         // Retourne 'true' si le résultat n'est pas vide
         return !empty($result);
     }
+
+    /**
+     * Permet de rechercher un utilisateur pour activer son compte
+     *
+     * @param [type] $userSlug
+     * @param [type] $activationToken
+     * @return void
+     */
+    public function activate_account($userSlug, $activationToken)
+    {
+        // Définition de la requête
+        $req = "UPDATE user set is_valid = 1 WHERE slug = :slug AND activation_token = :activationToken";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":slug", $userSlug, PDO::PARAM_STR);
+        $stmt->bindValue(":activationToken", $activationToken, PDO::PARAM_STR);
+        // On exécute la requête 
+        $stmt->execute();
+        // On récupère le résultat
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On vérifie si la requête a abouti
+        $isRequestSuccess = $stmt->rowCount() > 0;
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le statut de la requête
+        return $isRequestSuccess;
+    }
 }

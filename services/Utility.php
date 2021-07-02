@@ -3,12 +3,13 @@
 // Namespace des Services
 namespace App\Services;
  
-class Utility {
-
+class Utility 
+{
     // Définition de constantes de classe pour gérer les types d'alertes 
     public const DANGER_MESSAGE = "alert-danger";
     public const WARNING_MESSAGE = "alert-warning";
     public const SUCCESS_MESSAGE = "alert-success";
+    public const INFO_MESSAGE = "alert-info";
 
     /**
      * Permet d'ajouter des alertes (message et type) à la session courante
