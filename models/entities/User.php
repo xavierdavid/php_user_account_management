@@ -21,6 +21,7 @@ class User
     private $isValid;
     private $role;
     private $createdAt;
+    private $isRgpd;
     private $errors=[]; // Attribut spécifique stockant les éventuelles erreurs dans un tableau
 
     // Constantes de classe
@@ -33,6 +34,7 @@ class User
     const INVALID_COUNTRY = "INVALID_COUNTRY";
     const INVALID_EMAIL = "INVALID_EMAIL";
     const INVALID_PASSWORD = "INVALID_PASSWORD";
+    const INVALID_RGPD = "INVALID_RGPD";
 
    /**
     * Constructeur de la classe User
@@ -346,6 +348,25 @@ class User
             // Alors on affecte la valeur $createdAt à l'attribut de l'objet en cours
             // Contrôle de validité - $createdAt doit être un entier
             $this->createdAt = (string) $createdAt;
+            return $this;
+        }
+    }
+
+    public function getIsRgpd()
+    {
+        return $this->isRgpd;
+    }
+
+    public function setIsRgpd(int $isRgpd)
+    {
+        // Si $isRgpd a une valeur égale à '0'
+        if($isRgpd == 0) {
+            // Alors on affecte une erreur à l'attribut $errors (tableau des erreurs)
+            $this->errors[] = self::INVALID_RGPD;
+        } else {
+            // Sinon on affecte la valeur $isRgpd à l'attribut de l'objet en cours
+            // Contrôle de validité - $isRgpd doit être un entier
+            $this->isRgpd = (int) $isRgpd;
             return $this;
         }
     }

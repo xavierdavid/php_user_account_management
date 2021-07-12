@@ -38,7 +38,7 @@ class AccountController extends MainController
             // Si tel est le cas, on affiche un message d'échec
             Utility::addAlertMessage("Votre compte n'a pas été activé. Veuillez cliquer sur le lien d'activation envoyé par mail !", Utility::DANGER_MESSAGE);
             // On redirige l'utilisateur vers la page de login
-            Utility::redirect(URL."login");
+            Utility::redirect(URL."accueil");
         }
     }
 }

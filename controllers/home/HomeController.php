@@ -102,6 +102,14 @@ class HomeController extends MainController
                 $email = strip_tags($_POST['email']);
                 $password = strip_tags($_POST['password']);
                 $password_confirm = strip_tags($_POST['password_confirm']);
+               
+                // Si la case RGPD est cochée, on affecte la valeur 1 à la variable $isRgpd;
+               if(isset($_POST['is_rgpd'])) {
+                    $isRgpd = 1;
+                } else {
+                    // Sinon, on lui affecte la valeur 0
+                    $isRgpd = 0;
+                }
 
                 // Si l'email saisi existe déjà dans la base de données 
                 if($this->userManager->isUserEmailExist($email)) {
@@ -148,7 +156,8 @@ class HomeController extends MainController
                     'activationToken' => $activationToken,
                     'isValid' => $isValid,
                     'role' => $role,
-                    'createdAt' => $createdAt
+                    'createdAt' => $createdAt,
+                    'isRgpd' => $isRgpd
                 ];
 
                 // Stockage temporaire des données de l'utilisateur dans la session pour pré-remplir le formulaire en cas d'erreur
@@ -167,12 +176,13 @@ class HomeController extends MainController
                     $_SESSION['errorConfirmPassword'] = $errorConfirmPassword;
                 }
 
-                // Si le nouvel objet User instancié n'est pas valide ou que les deux mots de passe ne sont pas identiques ou que l'email est déjà utilisé
-                if(!$user->isUserValid() || $password_confirm !== $password || $this->userManager->isUserEmailExist($email)) {
+                // Si le nouvel objet User instancié n'est pas valide ou que les deux mots de passe ne sont pas identiques ou que l'email est déjà utilisé ou que la case RGPD n'est pas cochée...
+                if(!$user->isUserValid() || $password_confirm !== $password || $this->userManager->isUserEmailExist($email) || $isRgpd == 0) {
                     // On récupère les erreurs de validation de l'entité User
                     $errors = $user->getErrors();
                     // On stocke le tableau des erreurs d'entité dans la session
                     Utility::addFormErrorsIntoSession($errors);
+                
                     // On affiche un message d'alerte si le formulaire est incomplet
                     Utility::addAlertMessage("Le formulaire n'a pas pu être soumis. Certains champs sont incomplets ou invalides !", Utility::DANGER_MESSAGE);
                     // On redirige l'utilisateur vers la page d'inscription

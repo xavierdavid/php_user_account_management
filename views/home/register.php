@@ -119,18 +119,29 @@
                     } ?>
                 <input type="password" name="password_confirm" id="password_confirm" placeholder="Veuillez saisir à nouveau votre mot de passe" required>
 
-               <!--  <div class="checkbox-wrap">
-                    <input type="checkbox" name="_remember_me" class="chekbox-item">
-                    <label>Se souvenir de moi</label>
-                </div> -->
+               <!-- champ RGPD -->
+               <div class="checkbox-wrap">
+                    <input type="checkbox" name="is_rgpd" class="chekbox-item" required>
+                    <label for="is_rgpd">Accord RGPD <span>*</span></label><br>
+                    <!-- Affichage des erreurs du champ RGPD -->
+                    <?php 
+                    if(!empty($_SESSION['errors'])) {
+                        if(in_array("INVALID_RGPD", $_SESSION['errors'])) {
+                            ?> <div class="form-error">La case RGPD doit être cochée</div>
+                        <?php }
+                    } ?>
+                </div>
+                <div class="checkbox-wrap">
+                    <small>En cochant cette case, j'accepte que mes données personnelles soient utilisées pour les besoins du site.</small>
+                </div>
                         
                 <div class="form-link">
-                    <!-- Lien vers la route du formulaire de mot de passe oublié -->
-                    <!-- <p><a href="#"><i class="fas fa-question"></i> Mot de passe oublié...</a></p> -->
-                    <!-- Lien vers la route du formulaire d'inscription -->
-                    <!-- <p><a href="#"><i class="far fa-arrow-alt-circle-right"></i> S'inscrire</a></p> -->
+                    <!-- Lien vers la page des mentions légales -->
+                    <p><a href="#"><i class="fas fa-question"></i> Notre politique de protection des données...</a></p>
                 </div>
                     
+            </div>
+            <div class="input-section-footer">
                 <!-- Bouton de validation du formulaire -->
                 <div class="form-button">
                     <button class="button button-info" type="submit">S'inscrire</button>
