@@ -1,11 +1,11 @@
-<h1>Page d'inscription</h1>
+<h1>Inscription</h1>
 
-<!-- Affichage du formulaire de connexion -->
-<section class="form-container">
+<!-- Affichage du formulaire d'inscription -->
+<section class="form-container form-container-secondary">
     <form method="post" action="validation_inscription">
-        <div class="form-wrap">
-            <!-- Affichage des champs du formulaire de login de l'utilisateur -->
-            <div class="input-section-main">
+        <div class="form-wrap form-wrap-secondary">
+            <!-- Affichage des champs du formulaire d'inscription de l'utilisateur -->
+            <div class="input-section-secondary">
 
                 <!-- champ prénom -->
                 <label for="first_name">Prénom <span>*</span></label>
@@ -72,7 +72,7 @@
                 <input type="text" name="country" id="country" placeholder="Veuillez saisir votre pays" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['country']);}?>">
             </div>
 
-            <div class="input-section-aside">
+            <div class="input-section-secondary">
                 <!-- Champs photo de profil -->
                 <label for="cover_image">Photo de profil</label>
                 <input type="text" name="cover_image" id="cover_image" placeholder="Votre photo de profil">
@@ -86,7 +86,7 @@
                             ?> <div class="form-error">Le téléphone est invalide</div>
                         <?php }
                     } ?>
-                <input type="text" name="phone" id="phone" placeholder="Votre numéro de téléphone" value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['phone']);}?>">
+                <input type="text" name="phone" id="phone" placeholder="Votre numéro de téléphone" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['phone']);}?>">
                    
                 <!-- champ email -->
                 <label for="email">Email <span>*</span></label>

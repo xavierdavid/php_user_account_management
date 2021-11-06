@@ -26,6 +26,7 @@
     --color-info:#034e6e;
     --color-white: #f1f1f1;
     --color-grey: #d6d1d1;
+    --color-form-input: #e8f0fe;
     --background-danger: #e6cdca;
     --background-warning: #f3cd9e;
     --background-success: #b6d3b6;
@@ -48,7 +49,6 @@
 .content {
     width: 100%;
     margin: 70px auto;
-    padding: 10px 0;
 }
 
 /*****************************************************/
@@ -57,14 +57,14 @@
 h1 {
     font-family: 'Raleway', sans-serif;
     text-align: center;
-    padding: 20px;
+    padding: 40px;
     color: var(--color-title);
     font-size: 35px;
 }
 
 h2 {
     font-family: 'Raleway', sans-serif;
-    padding: 20px;
+    padding: 30px;
     color: var(--color-secondary);
     font-size: 25px;
 }
@@ -131,23 +131,37 @@ p {
     background-color: var(--color-secondary);
     background-image: linear-gradient(to bottom, var(--color-secondary), var(--color-primary));
     padding: 20px;
-    height: 100vh;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.form-container-primary {
+    height: 80vh;
+}
+
+.form-container-secondary {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    font-family: 'Open Sans', sans-serif;
+    height: 100vh;
 }
 
 .form-wrap {
-    width: 100%;
-    height: 80%;
     flex-shrink: 0;
     background-color: #fff;
     border-radius: 10px;
-    padding: 10px;
+    padding: 35px;
     display: flex;
     flex-wrap: wrap;
+    margin: auto; 
+}
+
+.form-wrap-primary {
+    width: 35%;
+}
+
+.form-wrap-secondary {
+    width: 100%;
 }
 
 .form-wrap h2 {
@@ -160,7 +174,11 @@ p {
     margin-right: 5px;
 }
 
-.input-section-main, .input-section-aside {
+.input-section-primary {
+    width: 100%;
+}
+
+.input-section-secondary {
     width: 50%;
 }
 
@@ -175,14 +193,22 @@ p {
 label {
     display: block;
    /*  position: relative; */
-    margin: 5px 25px;
     font-size: 16px;
     padding: 10px 0 5px 0;
     color: var(--color-secondary);
 }
 
+.input-section-primary label {
+    margin: 10px 0px 10px 35px;
+}
+
+.input-section-secondary label {
+    margin: 5px 32px;
+}
+
 label span {
     color: var(--color-danger);
+    font-size: 10px;
 }
 
 .form-error {
@@ -193,11 +219,9 @@ label span {
 
 input {
     display: block;
-    width: 400px;
-    margin: 10px 20px 20px 20px;
+    margin: auto;
     outline: 0;
-    background-color: var(--color-light);
-    border: 0;
+    background-color: var(--color-form-input);
     padding: 10px 12px;
     border-radius: 3px;
     font-size: 15px;
@@ -207,6 +231,14 @@ input {
 input:focus {
     border: 2px solid var(--color-title);
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.input-section-primary input {
+    width: 90%;
+}
+
+.input-section-secondary input {
+    width: 400px;
 }
 
 .form-button {
@@ -242,6 +274,12 @@ input:focus {
 
 .form-link p {
     margin: 5px 0;
+}
+
+.input-section-primary .form-link {
+    margin-top: 5px;
+    text-align: center;
+    padding: 5px 15px 0px 15px;
 }
 
 .form-link a {
@@ -429,7 +467,7 @@ nav {
 .dropdown-content {
     display: none;
     position: absolute;
-    top: 17px;
+    top: 30px;
     right: -15px;
     cursor: pointer;
     background-color: var(--color-dark);
@@ -701,6 +739,15 @@ nav {
 /*****************************************************/
 /***          Page de connexion utilisateur        ***/
 /*****************************************************/
+
+.login-icon {
+    text-align: center;
+    padding: 20px;
+}
+
+.login-icon img {
+    width: 6%;
+}
 
 
 

@@ -93,7 +93,7 @@ class UserManager extends Model
         $stmt->bindValue(":activationToken", $activationToken, PDO::PARAM_STR);
         // On exécute la requête 
         $stmt->execute();
-        // On récupère le résultat
+        // On récupère le résultat sous forme d'un tableau associatif
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         // On clôture la requête
         $stmt->closeCursor();
@@ -103,5 +103,72 @@ class UserManager extends Model
         $stmt->closeCursor();
         // On retourne le statut de la requête
         return $isRequestSuccess;
+    }
+
+    /**
+     * Permet de vérifier que l'email et le mot de passe existent en base de données
+     *
+     * @param [type] $email
+     * @param [type] $password
+     * @return boolean
+     */
+    public function isAuthenticationValid($email, $password)
+    {
+        // Récupération en base de données du mot de passe crypté correspondant à l'email de l'utilisateur
+        $userPassword = $this->getUserPassword($email);
+        // On vérifie si le mot de passe saisi et le mot de passe crypté récupéré en base de données sont identiques
+        return password_verify($password, $userPassword);
+    }
+
+    /**
+     * Permet de récupérer en base de données le mot de passe correspondant à l'email saisi par l'utilisateur
+     *
+     * @param [type] $email
+     * @return void
+     */
+    private function getUserPassword($email)
+    {
+        // Définition de la requête
+        $req="SELECT password FROM user WHERE email = :email";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+        // On exécute la requête 
+        $stmt->execute();
+        // On récupère le résultat sous forme d'un tableau associatif
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le résultat de la requête (mot de passe crypté)
+        return $result['password'];
+    }
+
+    /**
+     * Permet de vérifier que le compte
+     *
+     * @param [type] $email
+     * @return boolean
+     */
+    public function isAccountValid($email)
+    {
+        // Définition de la requête
+        $req="SELECT is_valid FROM user WHERE email = :email";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+        // On exécute la requête 
+        $stmt->execute();
+        // On récupère le résultat sous forme d'un tableau associatif
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne true ou false selon le résultat de la requête (au format int)
+        return ((int)$result['is_valid'] === 1) ? true : false;
     }
 }

@@ -43,10 +43,14 @@ try {
             break;
         case "activation_compte" : $accountController->account_activation($url[1], $url[2]);
             break;
+        case "connexion" : $homeController->login();
+            break;
+        case "validation_connexion" : $accountController->login_validation();
+            break;
         case "compte" :
             // On teste le 2ème élément de l'url
             switch ($url[1]) {
-                case "profil" : $homeController->profile();
+                case "profil" : $accountController->profile();
                     break;
             }    
         break;  

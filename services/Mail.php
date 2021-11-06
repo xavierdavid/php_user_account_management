@@ -38,7 +38,7 @@ class Mail
             $mail->Port = 1025;
             //On paramètre le charset
             $mail->CharSet = "utf-8";
-            // On indique le destinataires 
+            // On indique le destinataire 
             $mail->addAddress($userMail);
             // On définit l'expéditeur 
             $mail->setFrom("no-reply@site-associatif.fr");
@@ -52,11 +52,11 @@ class Mail
             $mail->send();
 
             // On génère un message d'alerte d'information à l'utilisateur
-            Utility::addAlertMessage("Mail envoyé !", Utility::INFO_MESSAGE);
+            Utility::addAlertMessage("<i class='far fa-envelope'></i> Mail envoyé !", Utility::INFO_MESSAGE);
 
         } catch (Exception $e) {
             // On génère un message d'alerte d'échec à l'utilisateur
-            Utility::addAlertMessage("Echec de l'envoi du mail ! : {$mail->ErrorInfo}", Utility::DANGER_MESSAGE);
+            Utility::addAlertMessage("<i class='far fa-frown'></i> Echec de l'envoi du mail ! : {$mail->ErrorInfo}", Utility::DANGER_MESSAGE);
         }
     }
 }

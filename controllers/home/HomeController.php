@@ -6,6 +6,7 @@ namespace App\Controllers\Home;
 // Utilisation des classes
 use App\Services\Utility;
 use App\Services\Mail;
+use App\Services\Security;
 use App\Models\Entities\User;
 use App\Controllers\MainController;
 use App\Models\Managers\UserManager;
@@ -32,7 +33,7 @@ class HomeController extends MainController
         // Définition d'un tableau associatif regroupant les données d'affichage de la page d'accueil du site
         $data_page = [
             "page_description" => "Description de la page d'accueil",
-            "page_title" => "Titre de la page d'accueil",
+            "page_title" => "Page d'accueil",
             "view" => "views/home/home.php",
             "template" => "views/common/template.php"
         ];
@@ -52,13 +53,13 @@ class HomeController extends MainController
     }
 
     /**
-     * Contrôle l'affichage de la page formulaire d'inscription utilisateur
+     * Contrôle l'affichage de la page du formulaire d'inscription utilisateur
      *
      * @return void
      */
     public function register()
     {
-        // Définition d'un tableau associatif regroupant les données d'affichage de la page d'accueil du site
+        // Définition d'un tableau associatif regroupant les données d'affichage de la page du formulaire d'inscription
         $data_page = [
             "page_description" => "Page d'inscription",
             "page_title" => "Page d'inscription",
@@ -79,29 +80,30 @@ class HomeController extends MainController
         // Vérification de la soumission du formulaire
         if(!empty($_POST)) {
             // Vérification que tous les champs requis sont renseignés
-            if(isset($_POST['first_name'], $_POST['last_name'], $_POST['address'], $_POST['postal'], $_POST['city'], $_POST['country'], $_POST['email'], $_POST['password'], $_POST['password_confirm']) 
+            if(isset($_POST['first_name'], $_POST['last_name'], $_POST['address'], $_POST['postal'], $_POST['city'], $_POST['country'], $_POST['phone'], $_POST['email'], $_POST['password'], $_POST['password_confirm']) 
             && !empty($_POST['first_name']) 
             && !empty($_POST['last_name']) 
             && !empty($_POST['address']) 
             && !empty($_POST['postal']) 
             && !empty($_POST['city']) 
-            && !empty($_POST['country']) 
+            && !empty($_POST['country'])
+            && !empty($_POST['phone']) 
             && !empty($_POST['email']) 
             && !empty($_POST['password'])
             && !empty($_POST['password_confirm'])) {
 
                 // Récupération, formatage et sécurisation des données du formulaire
-                $firstName = strip_tags($_POST['first_name']);
-                $lastName = strip_tags(strtoupper($_POST['last_name']));
-                $address = strip_tags($_POST['address']);
-                $postal = strip_tags($_POST['postal']);
-                $city = strip_tags(strtoupper($_POST['city']));
-                $country = strip_tags(strtoupper($_POST['country']));
-                $coverImage = strip_tags($_POST['cover_image']);
-                $phone = strip_tags($_POST['phone']);
-                $email = strip_tags($_POST['email']);
-                $password = strip_tags($_POST['password']);
-                $password_confirm = strip_tags($_POST['password_confirm']);
+                $firstName = Security::secureHtml($_POST['first_name']);
+                $lastName = Security::secureHtml(strtoupper($_POST['last_name']));
+                $address = Security::secureHtml($_POST['address']);
+                $postal = Security::secureHtml($_POST['postal']);
+                $city = Security::secureHtml(strtoupper($_POST['city']));
+                $country = Security::secureHtml(strtoupper($_POST['country']));
+                $coverImage = Security::secureHtml($_POST['cover_image']);
+                $phone = Security::secureHtml($_POST['phone']);
+                $email = Security::secureHtml($_POST['email']);
+                $password = Security::secureHtml($_POST['password']);
+                $password_confirm = Security::secureHtml($_POST['password_confirm']);
                
                 // Si la case RGPD est cochée, on affecte la valeur 1 à la variable $isRgpd;
                if(isset($_POST['is_rgpd'])) {
@@ -196,12 +198,12 @@ class HomeController extends MainController
                         Mail::userActivationMail($user);
                         
                         // On redirige l'utilisateur vers la page de login
-                        Utility::redirect(URL."accueil");
+                        Utility::redirect(URL."connexion");
                     } else {
                         // On affiche un message d'alerte à l'utilisateur
                         Utility::addAlertMessage("Erreur lors de la création de votre compte utilisateur !", Utility::DANGER_MESSAGE);
                         // On redirige l'utilisateur vers la page d'inscription
-                        Utility::redirect(URL."inscription"); 
+                        Utility::redirect(URL."connexion"); 
                     }
                 }
             } else {
@@ -211,5 +213,23 @@ class HomeController extends MainController
                 Utility::redirect(URL."inscription");
             }
         }
+    }
+
+    /**
+     * Contrôle l'affichage de la page du formulaire de connexion utilisateur
+     *
+     * @return void
+     */
+    public function login()
+    {
+        // Définition d'un tableau associatif regroupant les données d'affichage de la page du formulaire de connexion
+        $data_page = [
+            "page_description" => "Page de connexion",
+            "page_title" => "Page de connexion",
+            "view" => "views/home/login.php",
+            "template" => "views/common/template.php"
+        ];
+        // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données
+        $this->generatePage($data_page);
     }
 }

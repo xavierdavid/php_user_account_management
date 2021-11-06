@@ -61,7 +61,7 @@
                 </div>
            
                 <!-- Liens de connexion -->
-                <a href="#"><i class="fas fa-sign-in-alt login-icon"></i><span> Connexion</span></a>
+                <a href="<?= URL ?>connexion"><i class="fas fa-sign-in-alt login-icon"></i><span> Connexion</span></a>
                 <!-- Liens d'inscription -->
                 <a href="<?= URL ?>inscription"><span> Inscription</span></a>
         </div>
