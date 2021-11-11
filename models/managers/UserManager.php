@@ -18,29 +18,28 @@ class UserManager extends Model
     {
         // Définition de la requête
         $req = "
-        INSERT INTO user (first_name, last_name, address, phone, postal, city, country, cover_image, email, password, slug, activation_token, is_valid, role, created_at, is_rgpd) 
-        VALUES(:first_name, :last_name, :address, :phone, :postal, :city, :country, :cover_image, :email, :password, :slug, :activation_token, :is_valid, :role, :created_at, :is_rgpd)
+        INSERT INTO user (firstName, lastName, address, phone, postal, city, country, coverImage, email, password, slug, activationToken, isValid, role, createdAt, isRgpd) 
+        VALUES(:firstName, :lastName, :address, :phone, :postal, :city, :country, :coverImage, :email, :password, :slug, :activationToken, :isValid, :role, :createdAt, :isRgpd)
         ";
         // Connexion à la base de données et préparation d'une requête
         $stmt = $this->getDataBase()->prepare($req);
         // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
-        $stmt->bindValue(":first_name", $user->getFirstName(), PDO::PARAM_STR);
-        $stmt->bindValue(":last_name", $user->getLastName(), PDO::PARAM_STR);
+        $stmt->bindValue(":firstName", $user->getFirstName(), PDO::PARAM_STR);
+        $stmt->bindValue(":lastName", $user->getLastName(), PDO::PARAM_STR);
         $stmt->bindValue(":address", $user->getAddress(), PDO::PARAM_STR);
         $stmt->bindValue(":phone", $user->getPhone(), PDO::PARAM_STR);
         $stmt->bindValue(":postal", $user->getPostal(), PDO::PARAM_STR);
         $stmt->bindValue(":city", $user->getCity(), PDO::PARAM_STR);
         $stmt->bindValue(":country", $user->getCountry(), PDO::PARAM_STR);
-        $stmt->bindValue(":cover_image", $user->getCoverImage(), PDO::PARAM_STR);
+        $stmt->bindValue(":coverImage", $user->getCoverImage(), PDO::PARAM_STR);
         $stmt->bindValue(":email", $user->getEmail(), PDO::PARAM_STR);
         $stmt->bindValue(":password", $user->getPassword(), PDO::PARAM_STR);
         $stmt->bindValue(":slug", $user->getSlug(), PDO::PARAM_STR);
-        $stmt->bindValue(":cover_image", $user->getCoverImage(), PDO::PARAM_STR);
-        $stmt->bindValue(":activation_token", $user->getActivationToken(), PDO::PARAM_STR);
-        $stmt->bindValue(":is_valid", $user->getIsValid(), PDO::PARAM_INT);
+        $stmt->bindValue(":activationToken", $user->getActivationToken(), PDO::PARAM_STR);
+        $stmt->bindValue(":isValid", $user->getIsValid(), PDO::PARAM_INT);
         $stmt->bindValue(":role", $user->getRole(), PDO::PARAM_STR);
-        $stmt->bindValue(":created_at", $user->getCreatedAt(), PDO::PARAM_STR);
-        $stmt->bindValue(":is_rgpd", $user->getIsRgpd(), PDO::PARAM_INT);
+        $stmt->bindValue(":createdAt", $user->getCreatedAt(), PDO::PARAM_STR);
+        $stmt->bindValue(":isRgpd", $user->getIsRgpd(), PDO::PARAM_INT);
         // On exécute la requête 
         $stmt->execute();
         // On vérifie si la requête a abouti
@@ -85,7 +84,7 @@ class UserManager extends Model
     public function activate_account($userSlug, $activationToken)
     {
         // Définition de la requête
-        $req = "UPDATE user set is_valid = 1 WHERE slug = :slug AND activation_token = :activationToken";
+        $req = "UPDATE user set isValid = 1 WHERE slug = :slug AND activationToken = :activationToken";
         // Connexion à la base de données et préparation d'une requête
         $stmt = $this->getDataBase()->prepare($req);
         // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
@@ -106,69 +105,28 @@ class UserManager extends Model
     }
 
     /**
-     * Permet de vérifier que l'email et le mot de passe existent en base de données
-     *
-     * @param [type] $email
-     * @param [type] $password
-     * @return boolean
-     */
-    public function isAuthenticationValid($email, $password)
-    {
-        // Récupération en base de données du mot de passe crypté correspondant à l'email de l'utilisateur
-        $userPassword = $this->getUserPassword($email);
-        // On vérifie si le mot de passe saisi et le mot de passe crypté récupéré en base de données sont identiques
-        return password_verify($password, $userPassword);
-    }
-
-    /**
-     * Permet de récupérer en base de données le mot de passe correspondant à l'email saisi par l'utilisateur
+     * Permet de récupérer en base de données une instance de l'objet Utilisateur correspondant à l'email saisi dans le formulaire de connexion
      *
      * @param [type] $email
      * @return void
      */
-    private function getUserPassword($email)
+    public function getUserByEmail($email)
     {
         // Définition de la requête
-        $req="SELECT password FROM user WHERE email = :email";
+        $req="SELECT * FROM user WHERE email = :email";
         // Connexion à la base de données et préparation d'une requête
         $stmt = $this->getDataBase()->prepare($req);
         // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
         $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+        // On définit le mode de récupération sous la forme d'une instance de la classe 'User'
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
         // On exécute la requête 
         $stmt->execute();
-        // On récupère le résultat sous forme d'un tableau associatif
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        // On récupère le résultat
+        $result = $stmt->fetch();
         // On clôture la requête
         $stmt->closeCursor();
-        // On clôture la requête
-        $stmt->closeCursor();
-        // On retourne le résultat de la requête (mot de passe crypté)
-        return $result['password'];
-    }
-
-    /**
-     * Permet de vérifier que le compte
-     *
-     * @param [type] $email
-     * @return boolean
-     */
-    public function isAccountValid($email)
-    {
-        // Définition de la requête
-        $req="SELECT is_valid FROM user WHERE email = :email";
-        // Connexion à la base de données et préparation d'une requête
-        $stmt = $this->getDataBase()->prepare($req);
-        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
-        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
-        // On exécute la requête 
-        $stmt->execute();
-        // On récupère le résultat sous forme d'un tableau associatif
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        // On clôture la requête
-        $stmt->closeCursor();
-        // On clôture la requête
-        $stmt->closeCursor();
-        // On retourne true ou false selon le résultat de la requête (au format int)
-        return ((int)$result['is_valid'] === 1) ? true : false;
+        // On retourne le résultat de la requête
+        return $result;
     }
 }

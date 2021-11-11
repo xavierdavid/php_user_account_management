@@ -80,9 +80,9 @@ class HomeController extends MainController
         // Vérification de la soumission du formulaire
         if(!empty($_POST)) {
             // Vérification que tous les champs requis sont renseignés
-            if(isset($_POST['first_name'], $_POST['last_name'], $_POST['address'], $_POST['postal'], $_POST['city'], $_POST['country'], $_POST['phone'], $_POST['email'], $_POST['password'], $_POST['password_confirm']) 
-            && !empty($_POST['first_name']) 
-            && !empty($_POST['last_name']) 
+            if(isset($_POST['firstName'], $_POST['lastName'], $_POST['address'], $_POST['postal'], $_POST['city'], $_POST['country'], $_POST['phone'], $_POST['email'], $_POST['password'], $_POST['password_confirm']) 
+            && !empty($_POST['firstName']) 
+            && !empty($_POST['lastName']) 
             && !empty($_POST['address']) 
             && !empty($_POST['postal']) 
             && !empty($_POST['city']) 
@@ -93,20 +93,20 @@ class HomeController extends MainController
             && !empty($_POST['password_confirm'])) {
 
                 // Récupération, formatage et sécurisation des données du formulaire
-                $firstName = Security::secureHtml($_POST['first_name']);
-                $lastName = Security::secureHtml(strtoupper($_POST['last_name']));
+                $firstName = Security::secureHtml(ucfirst($_POST['firstName']));
+                $lastName = Security::secureHtml(strtoupper($_POST['lastName']));
                 $address = Security::secureHtml($_POST['address']);
                 $postal = Security::secureHtml($_POST['postal']);
                 $city = Security::secureHtml(strtoupper($_POST['city']));
                 $country = Security::secureHtml(strtoupper($_POST['country']));
-                $coverImage = Security::secureHtml($_POST['cover_image']);
+                $coverImage = Security::secureHtml($_POST['coverImage']);
                 $phone = Security::secureHtml($_POST['phone']);
                 $email = Security::secureHtml($_POST['email']);
                 $password = Security::secureHtml($_POST['password']);
                 $password_confirm = Security::secureHtml($_POST['password_confirm']);
                
                 // Si la case RGPD est cochée, on affecte la valeur 1 à la variable $isRgpd;
-               if(isset($_POST['is_rgpd'])) {
+               if(isset($_POST['isRgpd'])) {
                     $isRgpd = 1;
                 } else {
                     // Sinon, on lui affecte la valeur 0

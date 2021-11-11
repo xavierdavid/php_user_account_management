@@ -8,24 +8,24 @@
             <div class="input-section-secondary">
 
                 <!-- champ prénom -->
-                <label for="first_name">Prénom <span>*</span></label>
+                <label for="firstName">Prénom <span>*</span></label>
                     <?php 
                     if(!empty($_SESSION['errors'])) {
                         if(in_array("INVALID_FIRSTNAME", $_SESSION['errors'])) {
                             ?> <div class="form-error">Le prénom est invalide. Il doit comporter au moins 3 caractères</div>
                         <?php }                                     
                     } ?>
-                <input type="text" name="first_name" id="first_name" placeholder="Veuillez saisir votre prénom" required value="<?php if(isset($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['firstName']);}?>">
+                <input type="text" name="firstName" id="firstName" placeholder="Veuillez saisir votre prénom" required value="<?php if(isset($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['firstName']);}?>">
     
                 <!-- champ nom -->      
-                <label for="last_name">Nom <span>*</span></label>
+                <label for="lastName">Nom <span>*</span></label>
                     <?php 
                     if(!empty($_SESSION['errors'])) {
                         if(in_array("INVALID_LASTNAME", $_SESSION['errors'])) {
                             ?> <div class="form-error">Le nom est invalide. Il doit comporter au moins 2 caractères</div>
                         <?php } 
                     } ?>
-                <input type="text" name="last_name" id="last_name" placeholder="Veuillez saisir votre nom" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['lastName']);}?>">
+                <input type="text" name="lastName" id="lastName" placeholder="Veuillez saisir votre nom" required value="<?php if(!empty($_SESSION['registrationUserData'])){echo ($_SESSION['registrationUserData']['lastName']);}?>">
 
                 <!-- champ adresse -->
                 <label for="address">Adresse <span>*</span></label>
@@ -74,8 +74,8 @@
 
             <div class="input-section-secondary">
                 <!-- Champs photo de profil -->
-                <label for="cover_image">Photo de profil</label>
-                <input type="text" name="cover_image" id="cover_image" placeholder="Votre photo de profil">
+                <label for="coverImage">Photo de profil</label>
+                <input type="text" name="coverImage" id="coverImage" placeholder="Votre photo de profil">
 
                 <!-- champ téléphone -->
                 <label for="phone">Téléphone <span>*</span></label>
@@ -121,8 +121,8 @@
 
                <!-- champ RGPD -->
                <div class="checkbox-wrap">
-                    <input type="checkbox" name="is_rgpd" class="chekbox-item" required>
-                    <label for="is_rgpd">Accord RGPD <span>*</span></label><br>
+                    <input type="checkbox" name="isRgpd" class="chekbox-item" required>
+                    <label for="isRgpd">Accord RGPD <span>*</span></label><br>
                     <!-- Affichage des erreurs du champ RGPD -->
                     <?php 
                     if(!empty($_SESSION['errors'])) {

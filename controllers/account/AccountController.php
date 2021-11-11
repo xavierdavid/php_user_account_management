@@ -6,6 +6,7 @@ use App\Services\Utility;
 use App\Services\Security;
 use App\Controllers\MainController;
 use App\Models\Managers\UserManager;
+use App\Models\Entities\User;
 
 
 class AccountController extends MainController
@@ -53,35 +54,55 @@ class AccountController extends MainController
         // Vérification de la soumission du formulaire de connexion
         if(!empty($_POST)) {
             // Vérification que tous les champs requis sont renseignés
-            if(isset($_POST['email'], $_POST['password'])
-            && !empty($_POST['email'])
-            && !empty($_POST['password'])) {
+            if(isset($_POST['email'], $_POST['password'])&& !empty($_POST['email']) && !empty($_POST['password'])) {
                 // Récupération, formatage et sécurisation des données du formulaire de connexion
                 $email = Security::secureHtml($_POST['email']);
                 $password = Security::secureHtml($_POST['password']);
-                // Vérification de l'authentification de l'utilisateur
-                if($this->userManager->isAuthenticationValid($email, $password)) {
-                    // On vérifie si le compte de l'utilisateur concerné est actif
-                    if($this->userManager->isAccountValid($email)) {
-                        // On affiche un message d'alerte de succès
-                        Utility::addAlertMessage("Connexion établie !", Utility::SUCCESS_MESSAGE);
-                        // On stocke les informations du profil de l'utilisateur dans la session
-                        $_SESSION['profil'] = [
-                            "email" => $email
-                        ];
-                        // Redirection vers la page de profil
-                        Utility::redirect(URL."compte/profil");
-                    } else {
-                        // On génère un message d'erreur
-                        Utility::addAlertMessage("Le compte ".$email." n'a pas été activé. Veuillez cliquer sur le lien qui vous a été envoyé par email !", Utility::DANGER_MESSAGE);
-                        // On renvoie le mail d'activation à l'utilisateur
+                // Vérification que l'email saisi correspond au format 'email'
+                if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    // On affiche un message d'erreur
+                    Utility::addAlertMessage("L'email saisi n'est pas valide !", Utility::DANGER_MESSAGE);
+                }
+                
+                // On récupère en base de données une instance de la classe utilisateur correspondant à l'email saisi 
+                $user = $this->userManager->getUserByEmail($email);
+                
+                // Si l'utilisateur existe
+                if($user) {
+                    // Si le mot de passe saisi correspond au mot de passe de l'utilisateur enregistré en base de données
+                    if(password_verify($password, $user->getPassword())) {
+                        // Si le compte de l'utilisateur concerné est actif
+                        if($user->getIsValid() == 1) {
+                            // On affiche un message d'alerte de succès
+                            Utility::addAlertMessage("Connexion établie !", Utility::SUCCESS_MESSAGE);
+                            // On stocke les informations de connexion de l'utilisateur dans la session
+                            $_SESSION['user'] = [
+                                "firstName" => $user->getFirstName(),
+                                "lastName" => $user->getLastName(),
+                                "email" => $user->getEmail(),
+                                "role" => $user->getRole()
+                            ];
+                            // On redirige l'utilisateur vers la page de profil
+                            Utility::redirect(URL."compte/profil");
+                           
+                        } else {
+                            // Si le compte n'est pas actif, on génère un message d'erreur
+                            Utility::addAlertMessage("Le compte ".$email." n'a pas été activé. Veuillez cliquer sur le lien qui vous a été envoyé par email !", Utility::DANGER_MESSAGE);
+                            // On renvoie le mail d'activation à l'utilisateur
 
+                            // On redirige l'utilisateur vers la page de connexion
+                            Utility::redirect(URL."connexion");
+                        }
+                    } else {
+                        // Si les mots de passe ne correspondent pas, on affiche un message d'erreur
+                        Utility::addAlertMessage("Identifiants invalides !", Utility::DANGER_MESSAGE);
                         // On redirige l'utilisateur vers la page de connexion
                         Utility::redirect(URL."connexion");
                     }
+                       
                 } else {
-                    // On génère un message d'erreur
-                    Utility::addAlertMessage("Email ou mot de passe invalide !", Utility::DANGER_MESSAGE);
+                    // Si l'utilisateur n'existe pas, on affiche un message d'erreur
+                    Utility::addAlertMessage("Identifiants invalides !", Utility::DANGER_MESSAGE);
                     // On redirige l'utilisateur vers la page de connexion
                     Utility::redirect(URL."connexion");
                 }
@@ -91,11 +112,6 @@ class AccountController extends MainController
                 // Redirection de l'utilisateur vers la page de connexion
                 Utility::redirect(URL."connexion");
             }
-        } else {
-            // Affichage d'un message d'alerte si le formulaire est incomplet
-            Utility::addAlertMessage("Echec de la connexion. L'email et/ou le mot de passe ne sont pas renseignés !", Utility::DANGER_MESSAGE);
-            // Redirection de l'utilisateur vers la page de connexion
-            Utility::redirect(URL."connexion");
         }
     }
 
