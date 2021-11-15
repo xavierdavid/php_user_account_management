@@ -14,4 +14,15 @@ class Security
     {
         return strip_tags($string);
     }
+
+    /**
+     * Permet de vérifier qu'un utilisateur est connecté
+     *
+     * @return boolean
+     */
+    public static function isAuthenticated()
+    {
+        // On retourne 'true' si une variable de session 'user' existe ou faux si tel n'est pas le cas
+        return(!empty($_SESSION['user']));
+    }
 }

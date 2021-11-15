@@ -17,7 +17,7 @@
         <!-- Items de login et logout -->
         <div class="item-login-logout">
             <!-- Si un utilisateur est authentifié -->
-           
+            <?php if(!empty($_SESSION['user'])) { ?>
                 <a href="<?= URL ?>#" class="dropdown">
                     <!-- Si une image référencée en base de données et stockée dans le fichier 'uploads' existe pour cet utilisateur -->
                   
@@ -38,7 +38,7 @@
                     <!-- Dropdown menu -->
                     <div class="dropdown-content">
                         <!-- Lien vers la page du compte utilisateur -->
-                        <a href="#">Mon compte</a>
+                        <a href="<?= URL?>compte/profil">Mon compte</a>
                         <!-- Lien vers la page de modification du mot de passe -->
                         <a href="#">Editer mon profil</a>
                         <!-- Lien vers la page des publications -->
@@ -55,15 +55,17 @@
                         <hr>
                         <!-- Lien de déconnexion -->
                         <div class="logout-item">
-                            <a href="#"><i class="fas fa-power-off logout-icon"></i> Déconnection</a>
+                            <a href="<?= URL ?>compte/deconnexion"><i class="fas fa-power-off logout-icon"></i> Déconnection</a>
                         </div>
                     </div>
                 </div>
-           
+            <?php }?>
                 <!-- Liens de connexion -->
-                <a href="<?= URL ?>connexion"><i class="fas fa-sign-in-alt login-icon"></i><span> Connexion</span></a>
-                <!-- Liens d'inscription -->
-                <a href="<?= URL ?>inscription"><span> Inscription</span></a>
+                <?php if(empty($_SESSION['user'])) {?>
+                    <a href="<?= URL ?>connexion"><i class="fas fa-sign-in-alt login-icon"></i><span> Connexion</span></a>
+                    <!-- Liens d'inscription -->
+                    <a href="<?= URL ?>inscription"><span> Inscription</span></a>
+                <?php } ?>
         </div>
         
         <!-- Icône de menu hamburger responsive -->

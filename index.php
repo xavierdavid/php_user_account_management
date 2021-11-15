@@ -5,6 +5,8 @@ use App\Autoloader;
 // Utilisation des contrôleurs
 use App\Controllers\Home\HomeController; 
 use App\Controllers\Account\AccountController;
+use App\Services\Security;
+use App\Services\Utility;
 
 // Démarrage de la session
 session_start();
@@ -48,11 +50,24 @@ try {
         case "validation_connexion" : $accountController->login_validation();
             break;
         case "compte" :
-            // On teste le 2ème élément de l'url
-            switch ($url[1]) {
-                case "profil" : $accountController->profile();
-                    break;
-            }    
+            // Vérification de l'authentification de l'utlisateur
+            if(Security::isAuthenticated()) {
+                // On teste le 2ème élément de l'url
+                switch ($url[1]) {
+                    case "profil" : $accountController->profile();
+                        break;
+                    case "deconnexion" : $accountController->logout();
+                        break;
+                        default:
+                        // Dans les autres cas, on lance une exception
+                        throw new Exception("La page demandée n'existe pas.");
+                }    
+            } else {
+                // Si l'utilisateur n'est pas authentifié, on envoie un message d'alerte
+                Utility::addAlertMessage("Veuillez vous connecter pour accéder à cette section !", Utility::WARNING_MESSAGE);
+                // On redirige l'utilisateur vers la page de login
+                Utility::redirect(URL."connexion");
+            }
         break;  
         default:
             // Dans les autres cas, on lance une exception

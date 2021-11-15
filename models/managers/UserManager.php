@@ -105,7 +105,7 @@ class UserManager extends Model
     }
 
     /**
-     * Permet de récupérer en base de données une instance de l'objet Utilisateur correspondant à l'email saisi dans le formulaire de connexion
+     * Permet de récupérer en base de données une instance de l'objet Utilisateur correspondant à l'email saisi dans le formulaire de connexion ou stocké dans la session
      *
      * @param [type] $email
      * @return void

@@ -116,20 +116,39 @@ class AccountController extends MainController
     }
 
     /**
-     * Contrôle le paramétrage et l'affichage de la page de profil d el'utilisateur
+     * Contrôle le paramétrage et l'affichage de la page de profil de l'utilisateur authentifié
      *
      * @return void
      */
     public function profile()
     {
+        // Récupération des données de l'utilisateur authentifié
+        $userData = $this->userManager->getUserByEmail($_SESSION['user']['email']);
+    
         // Définition d'un tableau associatif regroupant les données d'affichage de la page d'accueil du site
         $data_page = [
         "page_description" => "Page de profil",
         "page_title" => "Page de profil",
-        "view" => "views/account/account.php",
+        "user_data" => $userData,
+        "view" => "views/account/profile.php",
         "template" => "views/common/template.php"
         ];
         // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données
         $this->generatePage($data_page);
+    }
+
+    /**
+     * Contrôle la déconnexion de l'utilisateur
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        // Destruction de la variable de session
+        unset($_SESSION['user']);
+        // Message d'alerte
+        Utility::addAlertMessage("Déconnexion effectuée !", Utility::SUCCESS_MESSAGE);
+        // On redirige l'utilisateur vers la page d'accueil
+        Utility::redirect(URL."accueil");
     }
 }
