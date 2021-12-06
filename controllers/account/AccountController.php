@@ -54,7 +54,7 @@ class AccountController extends MainController
         // Vérification de la soumission du formulaire de connexion
         if(!empty($_POST)) {
             // Vérification que tous les champs requis sont renseignés
-            if(isset($_POST['email'], $_POST['password'])&& !empty($_POST['email']) && !empty($_POST['password'])) {
+            if(isset($_POST['email'], $_POST['password']) && !empty($_POST['email']) && !empty($_POST['password'])) {
                 // Récupération, formatage et sécurisation des données du formulaire de connexion
                 $email = Security::secureHtml($_POST['email']);
                 $password = Security::secureHtml($_POST['password']);
@@ -82,6 +82,25 @@ class AccountController extends MainController
                                 "email" => $user->getEmail(),
                                 "role" => $user->getRole()
                             ];
+                            // Gestion de l'option "Se souvenir de moi" à l'aide de cookies
+                            if(isset($_POST['rememberMe'])) {
+                                // Création de cookies
+                                setcookie("email", $email, time()+365*24*3600,'/','', true,true);
+                                setcookie("password", $password, time()+365*24*3600, '/','',true, true);
+                            // Si l'option n'a pas été cochée
+                            } else {
+                                // Si un cookie 'email' existe
+                                if(isset($_COOKIE['email'])) {
+                                    // Alors on supprime la valeur du cookie 'email'
+                                    setcookie($_COOKIE['email'],""); 
+                                }
+                                // Si un cookie 'password' existe
+                                if(isset($_COOKIE['password'])) {
+                                    // Alors on supprime la valeur du 'password''
+                                    setcookie($_COOKIE['password'],""); 
+                                }
+                            }
+
                             // On redirige l'utilisateur vers la page de profil
                             Utility::redirect(URL."compte/profil");
                            

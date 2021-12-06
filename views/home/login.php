@@ -11,16 +11,21 @@
             <div class="input-section-primary">
                 <!-- champ email -->
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" placeholder="Veuillez saisir votre email" required>
+                <input type="email" name="email" id="email" value = "<?php if(isset($_COOKIE['email'])){echo $_COOKIE['email'];}?>" placeholder="Veuillez saisir votre email" required>
                 <!-- champ mot de passe -->
                 <label for="password">Mot de passe</label>
-                <input type="password" name="password" id="password" placeholder="Veuillez saisir votre mot de passe" required>
+                <input type="password" name="password" id="password" value = "<?php if(isset($_COOKIE['password'])){echo $_COOKIE['password'];}?>" placeholder="Veuillez saisir votre mot de passe" required>
+                <!-- Case à cocher "Se souvenir de moi" -->
+                <div class="checkbox-wrap">
+                    <input type="checkbox" name="rememberMe" class="chekbox-item" id="rememberMe">
+                    <label for="rememberMe">Se souvenir de moi</label>
+                </div>
+                <!-- Lien vers la gestion du mot de passe oublié -->
                 <div class="form-link">
-                    <!-- Lien vers la gestion du mot de passe oublié -->
                     <p><a href="#"><i class="fas fa-question"></i> Mot de passe oublié...</a></p>
                 </div>
+                <!-- Lien vers le formulaire d'inscription -->
                 <div class="form-link">
-                    <!-- Lien vers le formulaire d'inscription -->
                     <p><a href="<?= URL ?>/inscription"><i class="fas fa-hand-point-right"></i> Pas encore inscrit ?</a></p>
                 </div>
                 <div class="input-section-footer">
