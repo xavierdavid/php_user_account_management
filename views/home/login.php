@@ -7,7 +7,7 @@
     </div>
     <form method="post" action="validation_connexion">
         <div class="form-wrap form-wrap-primary">
-            <!-- Afæfichage des champs du formulaire de connexion -->
+            <!-- Affichage des champs du formulaire de connexion -->
             <div class="input-section-primary">
                 <!-- champ email -->
                 <label for="email">Email</label>
@@ -22,7 +22,7 @@
                 </div>
                 <!-- Lien vers la gestion du mot de passe oublié -->
                 <div class="form-link">
-                    <p><a href="#"><i class="fas fa-question"></i> Mot de passe oublié...</a></p>
+                    <p><a href="<?= URL ?>mot_de_passe_oublie"><i class="fas fa-question"></i> Mot de passe oublié...</a></p>
                 </div>
                 <!-- Lien vers le formulaire d'inscription -->
                 <div class="form-link">

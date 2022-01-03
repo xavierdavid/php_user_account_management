@@ -49,6 +49,10 @@ try {
             break;
         case "validation_connexion" : $accountController->login_validation();
             break;
+        case "mot_de_passe_oublie" : $accountController->forgotten_password();
+            break;
+        case "reinitialisation_mot_de_passe" : $accountController->reset_password();
+            break;
         case "compte" :
             // Vérification de l'authentification de l'utlisateur
             if(Security::isAuthenticated()) {

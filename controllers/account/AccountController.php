@@ -82,12 +82,12 @@ class AccountController extends MainController
                                 "email" => $user->getEmail(),
                                 "role" => $user->getRole()
                             ];
-                            // Gestion de l'option "Se souvenir de moi" à l'aide de cookies
+                            // Si l'option "Se souvenir de moi" a été sélectionnée
                             if(isset($_POST['rememberMe'])) {
-                                // Création de cookies
+                                // Création de cookies pour l'email et le mot de passe
                                 setcookie("email", $email, time()+365*24*3600,'/','', true,true);
                                 setcookie("password", $password, time()+365*24*3600, '/','',true, true);
-                            // Si l'option n'a pas été cochée
+                            // Si l'option n'a pas été sélectionnée
                             } else {
                                 // Si un cookie 'email' existe
                                 if(isset($_COOKIE['email'])) {
@@ -169,5 +169,69 @@ class AccountController extends MainController
         Utility::addAlertMessage("Déconnexion effectuée !", Utility::SUCCESS_MESSAGE);
         // On redirige l'utilisateur vers la page d'accueil
         Utility::redirect(URL."accueil");
+    }
+
+    /**
+     * Contrôle le paramétrage et l'affichage de la page de réinitialisation du mot de passe
+     *
+     * @return void
+     */
+    public function forgotten_password() 
+    {
+        // Définition d'un tableau associatif regroupant les données d'affichage de la page de réinitialisation du mot de passe
+        $data_page = [
+            "page_description" => "Réinitialisation du mot de passe",
+            "page_title" => "Page de réinitialisation du mot de passe",
+            "view" => "views/account/forgotten_password.php",
+            "template" => "views/common/template.php"
+            ];
+            // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données
+            $this->generatePage($data_page);
+    }
+
+    /**
+     * Contrôle le traitement du formulaire de réinitialisation du mot de passe
+     *
+     * @return void
+     */
+    public function reset_password()
+    {
+        // Vérification de la soumission du formulaire de réinitialisation
+        if(!empty($_POST)) {
+            // Vérification que tous les champs requis sont renseignés
+            if(isset($_POST['email'])) {
+                // Récupération, formatage et sécurisation des données du formulaire de réinitialisation
+                $email = Security::secureHtml($_POST['email']);
+                // Vérification que l'email saisi correspond au format 'email'
+                if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    // On affiche un message d'erreur
+                    Utility::addAlertMessage("L'email saisi n'est pas valide !", Utility::DANGER_MESSAGE);
+                     // Redirection de l'utilisateur vers la page de réinitialisation
+                    Utility::redirect(URL."mot_de_passe_oublie");
+                }
+
+                // On récupère en base de données une instance de la classe utilisateur correspondant à l'email saisi 
+                $user = $this->userManager->getUserByEmail($email);
+
+                // Si l'utilisateur existe
+                if($user) {
+                    // Affichage d'un message d'alerte si l'utilisateur n'existe pas
+                    Utility::addAlertMessage("L'eamil correspond à un utilisateur en base de données !", Utility::SUCCESS_MESSAGE);
+                    // Redirection de l'utilisateur vers la page de réinitialisation
+                    Utility::redirect(URL."mot_de_passe_oublie");
+                } else {
+                    // Affichage d'un message d'alerte si l'utilisateur n'existe pas
+                    Utility::addAlertMessage("Aucun utilisateur n'existe avec cet email !", Utility::DANGER_MESSAGE);
+                    // Redirection de l'utilisateur vers la page de réinitialisation
+                    Utility::redirect(URL."mot_de_passe_oublie");
+                }
+
+            } else {
+                // Affichage d'un message d'alerte si le formulaire est incomplet
+                Utility::addAlertMessage("Le formulaire est incomplet, veuillez saisir votre mot de passe !", Utility::DANGER_MESSAGE);
+                // Redirection de l'utilisateur vers la page de réinitialisation
+                Utility::redirect(URL."mot_de_passe_oublie");
+            }
+        } 
     }
 }
