@@ -96,13 +96,13 @@ class Utility
     }
 
     /**
-     * Permet de générer un token d'activation avec chiffrement
+     * Permet de générer un token avec chiffrement
      *
      * @return void
      */
-    public static function generateActivationToken()
+    public static function generateToken()
     {
-        $activationToken = md5(uniqid());
-        return $activationToken;
+        $token = md5(uniqid());
+        return $token;
     }
 }

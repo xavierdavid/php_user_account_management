@@ -7,6 +7,7 @@ use App\Services\Security;
 use App\Controllers\MainController;
 use App\Models\Managers\UserManager;
 use App\Models\Entities\User;
+use App\Services\Mail;
 
 
 class AccountController extends MainController
@@ -30,7 +31,7 @@ class AccountController extends MainController
     */
     public function account_activation($userSlug, $activationToken)
     {
-        // On vérifie si le slug de l'utilisateur et le token d'activation récupérés via l'url sont identiques à ceux stockés dans la base de données
+        // On vérifie que le slug de l'utilisateur et le token d'activation récupérés via l'url sont identiques à ceux stockés dans la base de données pour activer son compte
         if($this->userManager->activate_account($userSlug, $activationToken)){
             // Si tel est le cas, on indique à l'utilisateur que son compte est activé
             Utility::addAlertMessage("<i class='far fa-smile'></i> Votre compte a été activé !", Utility::SUCCESS_MESSAGE);
@@ -209,14 +210,43 @@ class AccountController extends MainController
                      // Redirection de l'utilisateur vers la page de réinitialisation
                     Utility::redirect(URL."mot_de_passe_oublie");
                 }
-
                 // On récupère en base de données une instance de la classe utilisateur correspondant à l'email saisi 
                 $user = $this->userManager->getUserByEmail($email);
 
                 // Si l'utilisateur existe
                 if($user) {
-                    // Affichage d'un message d'alerte si l'utilisateur n'existe pas
-                    Utility::addAlertMessage("L'eamil correspond à un utilisateur en base de données !", Utility::SUCCESS_MESSAGE);
+                    // Si le compte utilisateur n'est pas encore activé
+                    if($user->getIsValid() == 0) {
+                        // Affichage d'un message d'alerte
+                        Utility::addAlertMessage("Votre email correspond bien à un compte utilisateur présent dans notre base de données. Ce dernier n'a toutefois pas encore été activé  ! Un mail vient de vous être envoyé à l'adresse " . $user->getEmail() ." pour activer votre compte.", Utility::DANGER_MESSAGE);
+                
+                        // On génère d'un nouveau token d'activation de compte
+                        $newActivationToken = Utility::generateToken();
+                        // On affecte la valeur du token de l'utilisateur à l'attribut correspondant à l'aide du setter de la classe User
+                        $user->setActivationToken($newActivationToken);
+                        // On enregistre la valeur du nouveau token de l'utilisateur concerné dans la base de données
+                        $isUpdateToken = $this->userManager->updateActivationToken($user, $newActivationToken);
+                        // Si la requête d'actualisation du token a abouti
+                        if($isUpdateToken) {
+                            // On envoie un nouvel email d'activation de compte à l'utilisateur à partir de ses informations
+                            Mail::userActivationMail($user);
+                        }
+                    }
+
+                    // Si le compte utilisateur a déjà été activé
+                    if($user->getIsValid() == 1) {
+                        // Affichage d'un message d'alerte si l'utilisateur n'existe pas
+                        Utility::addAlertMessage("Votre email correspond bien à un utilisateur présent dans notre base de données ! Nous venons de générer un token de réinitialisation.", Utility::SUCCESS_MESSAGE);
+
+                        // On génère un token de réinitialisation
+                        $resetToken = Utility::generateToken();
+
+                        // On affecte la valeur du token à l'attribut de l'objet User
+                        $user->setResetToken($resetToken);
+                        // On enregistre la valeur en base de données
+                        $isResetToken = $this->userManager->setResetTokenIntoDatabase($user, $resetToken);
+
+                    }
                     // Redirection de l'utilisateur vers la page de réinitialisation
                     Utility::redirect(URL."mot_de_passe_oublie");
                 } else {

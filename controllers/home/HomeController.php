@@ -130,8 +130,8 @@ class HomeController extends MainController
                 $text = $firstName . " " . $lastName;
                 $slug = Utility::generateSlug($text);
 
-                // Génération d'un token d'activation de compte
-                $activationToken = Utility::generateActivationToken();
+                // Génération d'un token d'activation
+                $activationToken = Utility::generateToken();
 
                 // Statut de l'activation par email (0 par défaut)
                 $isValid = 0;

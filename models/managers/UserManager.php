@@ -75,7 +75,7 @@ class UserManager extends Model
     }
 
     /**
-     * Permet de rechercher un utilisateur pour activer son compte
+     * Permet de rechercher un utilisateur à partir de son slug et son token d'activation pour activer son compte
      *
      * @param [type] $userSlug
      * @param [type] $activationToken
@@ -92,10 +92,6 @@ class UserManager extends Model
         $stmt->bindValue(":activationToken", $activationToken, PDO::PARAM_STR);
         // On exécute la requête 
         $stmt->execute();
-        // On récupère le résultat sous forme d'un tableau associatif
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        // On clôture la requête
-        $stmt->closeCursor();
         // On vérifie si la requête a abouti
         $isRequestSuccess = $stmt->rowCount() > 0;
         // On clôture la requête
@@ -128,5 +124,56 @@ class UserManager extends Model
         $stmt->closeCursor();
         // On retourne le résultat de la requête
         return $result;
+    }
+
+    /**
+     * Permet d'enregistrer en base de données une nouvelle valeur de token d'activation de compte pour une instance d'objet utilisateur User
+     *
+     * @param [type] $user
+     * @param [type] $newActivationToken
+     * @return void
+     */
+    public function updateActivationToken($user, $newActivationToken)
+    {
+        // Définition de la requête
+        $req = "UPDATE user set activationToken = :activationToken WHERE email = :email";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":email", $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindValue(":activationToken", $newActivationToken, PDO::PARAM_STR);
+         // On exécute la requête 
+         $stmt->execute();
+         // On vérifie si la requête a abouti
+         $isUpdateToken = $stmt->rowCount() > 0;
+         // On clôture la requête
+         $stmt->closeCursor();
+         // On retourne le statut de la requête
+         return $isUpdateToken;
+    }
+
+    /**
+     * Permet d'enregistrer en base de données le token de réinitialisation de compte pour une instance d'objet unitlisateur User
+     *
+     * @param [type] $user
+     * @param [type] $resetToken
+     * @return void
+     */
+    public function setResetTokenIntoDatabase($user, $resetToken) {
+        // Définition de la requête
+        $req = "UPDATE user set resetToken = :resetToken WHERE email = :email";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":email", $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindValue(":resetToken", $resetToken, PDO::PARAM_STR);
+         // On exécute la requête 
+         $stmt->execute();
+         // On vérifie si la requête a abouti
+         $isResetToken = $stmt->rowCount() > 0;
+         // On clôture la requête
+         $stmt->closeCursor();
+         // On retourne le statut de la requête
+         return $isResetToken;
     }
 }

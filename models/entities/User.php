@@ -22,6 +22,7 @@ class User
     private $role;
     private $createdAt;
     private $isRgpd;
+    private $resetToken;
     private $errors=[]; // Attribut spécifique stockant les éventuelles erreurs dans un tableau
 
     // Constantes de classe
@@ -298,7 +299,7 @@ class User
         // Si le token de validation n'est pas vide
         if(!empty($activationToken)) {
             // Alors on affecte la valeur $activationToken à l'attribut de l'objet en cours
-            // Contrôle de validité - $activationToken doit être une châine
+            // Contrôle de validité - $activationToken doit être une chaîne
             $this->activationToken = (string) $activationToken;
             return $this;
         }
@@ -367,6 +368,22 @@ class User
             // Sinon on affecte la valeur $isRgpd à l'attribut de l'objet en cours
             // Contrôle de validité - $isRgpd doit être un entier
             $this->isRgpd = (int) $isRgpd;
+            return $this;
+        }
+    }
+
+    public function getResetToken()
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(string $resetToken)
+    {
+        // Si le token de réinitialisation n'est pas vide
+        if(!empty($resetToken)) {
+            // Alors on affecte la valeur $resetToken à l'attribut de l'objet en cours
+            // Contrôle de validité - $resetToken doit être une chaîne
+            $this->resetToken = (string) $resetToken;
             return $this;
         }
     }
