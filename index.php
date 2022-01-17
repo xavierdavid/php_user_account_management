@@ -53,6 +53,8 @@ try {
             break;
         case "reinitialisation_mot_de_passe" : $accountController->reset_password();
             break;
+        case "nouveau_mot_de_passe" : $accountController->reset_password_verification($url[1], $url[2]);
+            break;
         case "compte" :
             // Vérification de l'authentification de l'utlisateur
             if(Security::isAuthenticated()) {

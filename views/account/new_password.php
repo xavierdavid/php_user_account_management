@@ -1,0 +1,1 @@
+<h1>Votre nouveau mot de passe</h1>

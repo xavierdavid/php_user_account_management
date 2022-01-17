@@ -191,13 +191,13 @@ class AccountController extends MainController
     }
 
     /**
-     * Contrôle le traitement du formulaire de réinitialisation du mot de passe
+     * Contrôle le traitement du formulaire de demande de réinitialisation du mot de passe
      *
      * @return void
      */
     public function reset_password()
     {
-        // Vérification de la soumission du formulaire de réinitialisation
+        // Vérification de la soumission du formulaire de demande de réinitialisation
         if(!empty($_POST)) {
             // Vérification que tous les champs requis sont renseignés
             if(isset($_POST['email'])) {
@@ -217,27 +217,36 @@ class AccountController extends MainController
                 if($user) {
                     // Si le compte utilisateur n'est pas encore activé
                     if($user->getIsValid() == 0) {
-                        // Affichage d'un message d'alerte
-                        Utility::addAlertMessage("Votre email correspond bien à un compte utilisateur présent dans notre base de données. Ce dernier n'a toutefois pas encore été activé  ! Un mail vient de vous être envoyé à l'adresse " . $user->getEmail() ." pour activer votre compte.", Utility::DANGER_MESSAGE);
-                
+                        
                         // On génère d'un nouveau token d'activation de compte
                         $newActivationToken = Utility::generateToken();
+                        
                         // On affecte la valeur du token de l'utilisateur à l'attribut correspondant à l'aide du setter de la classe User
                         $user->setActivationToken($newActivationToken);
+                        
                         // On enregistre la valeur du nouveau token de l'utilisateur concerné dans la base de données
                         $isUpdateToken = $this->userManager->updateActivationToken($user, $newActivationToken);
+                        
                         // Si la requête d'actualisation du token a abouti
                         if($isUpdateToken) {
+                            // Affichage d'un message d'alerte
+                            Utility::addAlertMessage("Votre email correspond bien à un compte utilisateur présent dans notre base de données. Ce dernier n'a toutefois pas encore été activé  ! Un mail vient de vous être envoyé à l'adresse " . $user->getEmail() ." pour activer votre compte.", Utility::DANGER_MESSAGE);
+                            
                             // On envoie un nouvel email d'activation de compte à l'utilisateur à partir de ses informations
                             Mail::userActivationMail($user);
+
+                        } else {
+                            // Affichage d'un message d'alerte
+                            Utility::addAlertMessage("Une erreur s'est produite !", Utility::DANGER_MESSAGE);
+                            
+                            // Redirection de l'utilisateur vers la page de réinitialisation
+                            Utility::redirect(URL."mot_de_passe_oublie");
                         }
                     }
 
                     // Si le compte utilisateur a déjà été activé
                     if($user->getIsValid() == 1) {
-                        // Affichage d'un message d'alerte si l'utilisateur n'existe pas
-                        Utility::addAlertMessage("Votre email correspond bien à un utilisateur présent dans notre base de données ! Nous venons de générer un token de réinitialisation.", Utility::SUCCESS_MESSAGE);
-
+                        
                         // On génère un token de réinitialisation
                         $resetToken = Utility::generateToken();
 
@@ -245,7 +254,21 @@ class AccountController extends MainController
                         $user->setResetToken($resetToken);
                         // On enregistre la valeur en base de données
                         $isResetToken = $this->userManager->setResetTokenIntoDatabase($user, $resetToken);
-
+                        
+                        // Si la requête d'enregistrement du token de réinitialisation a abouti
+                        if($isResetToken) {
+                            // Affichage d'un message d'alerte si l'utilisateur n'existe pas
+                            Utility::addAlertMessage("Votre email correspond bien à un utilisateur présent dans notre base de données ! Un mail vient de vous être envoyé à l'adresse " . $user->getEmail() ." pour réinitialiser votre compte.", Utility::SUCCESS_MESSAGE);
+    
+                            // On envoie un email de réinitialisation du mot de passe à l'utilisateur à partir de ses informations
+                            Mail::userResetMail($user);
+                        } else {
+                            // Affichage d'un message d'alerte
+                            Utility::addAlertMessage("Une erreur s'est produite !", Utility::DANGER_MESSAGE);
+                            
+                            // Redirection de l'utilisateur vers la page de réinitialisation
+                            Utility::redirect(URL."mot_de_passe_oublie");
+                        }
                     }
                     // Redirection de l'utilisateur vers la page de réinitialisation
                     Utility::redirect(URL."mot_de_passe_oublie");
@@ -263,5 +286,46 @@ class AccountController extends MainController
                 Utility::redirect(URL."mot_de_passe_oublie");
             }
         } 
+    }
+
+    /**
+     * Contrôle la procédure de vérification du slug et du token de réinitialisation du mot de passe de l'utilisateur
+     *
+     * @param [type] $userSlug
+     * @param [type] $resetToken
+     * @return void
+     */
+    public function reset_password_verification($userSlug, $resetToken)
+    {
+        // On vérifie que le slug et le token de réinitialisation récupérés via l'url correspondent bien à un utilisateur stocké dans la base de données 
+        if($this->userManager->getUserBySlugAndResetToken($userSlug, $resetToken)){
+            // Si tel est le cas, on affiche le formulaire de réinitialisation du mot de passe à l'aide de la méthode new_password_form()
+            $this->new_password_form();
+        } else {
+            // Si tel n'est le cas, on affiche un message d'échec
+            Utility::addAlertMessage("<i class='far fa-frown'></i> Votre compte n'a pas pu être réinitialisé ! Veuillez cliquer sur le lien de réinitialisation envoyé par mail !", Utility::DANGER_MESSAGE);
+            // On redirige l'utilisateur vers la page de connexion
+            Utility::redirect(URL."connexion");
+        }
+    }
+
+   /**
+    * Contrôle le paramétrage et l'affichage de la page du formulaire de réinitialisation du mot de passe
+    *
+    * @return void
+    */
+    public function new_password_form()
+    {
+        // Définition d'un tableau associatif regroupant les données d'affichage de la page du formulaire de réinitialisation du mot de passe
+        $data_page = [
+            "page_description" => "Nouveau mot de passe",
+            "page_title" => "Formulaire de réinitialisation du mot de passe",
+            "view" => "views/account/new_password.php",
+            "template" => "views/common/template.php"
+            ];
+            // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données
+            $this->generatePage($data_page);
+
+        // Si le slug et le token de réinitialisation ne sont pas valides
     }
 }

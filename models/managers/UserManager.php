@@ -118,12 +118,12 @@ class UserManager extends Model
         $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
         // On exécute la requête 
         $stmt->execute();
-        // On récupère le résultat
-        $result = $stmt->fetch();
+        // On récupère le résultat (utilisateur)
+        $user = $stmt->fetch();
         // On clôture la requête
         $stmt->closeCursor();
-        // On retourne le résultat de la requête
-        return $result;
+        // On retourne le résultat la requête (utilisateur)
+        return $user;
     }
 
     /**
@@ -153,7 +153,7 @@ class UserManager extends Model
     }
 
     /**
-     * Permet d'enregistrer en base de données le token de réinitialisation de compte pour une instance d'objet unitlisateur User
+     * Permet d'enregistrer en base de données le token de réinitialisation de compte pour une instance d'objet utilisateur User
      *
      * @param [type] $user
      * @param [type] $resetToken
@@ -175,5 +175,31 @@ class UserManager extends Model
          $stmt->closeCursor();
          // On retourne le statut de la requête
          return $isResetToken;
+    }
+
+    /**
+     * Permet de rechercher un utilisateur à partir du slug et du token de réinitialisation de mot de passe
+     *
+     * @param [type] $userSlug
+     * @param [type] $resetToken
+     * @return void
+     */
+    public function getUserBySlugAndResetToken($userSlug, $resetToken)
+    {
+        // Définition de la requête
+        $req = "SELECT * FROM user WHERE slug = :slug AND resetToken = :resetToken";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":slug", $userSlug, PDO::PARAM_STR);
+        $stmt->bindValue(":resetToken", $resetToken, PDO::PARAM_STR);
+        // On exécute la requête 
+        $stmt->execute();
+        // On vérifie si la requête a abouti
+        $isRequestSuccess = $stmt->rowCount() > 0;
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le statut de la requête
+        return $isRequestSuccess;
     }
 }
