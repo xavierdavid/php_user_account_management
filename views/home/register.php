@@ -2,7 +2,7 @@
 
 <!-- Affichage du formulaire d'inscription -->
 <section class="form-container form-container-secondary">
-    <form method="post" action="validation_inscription">
+    <form method="post" action="<?= URL ?>validation_inscription">
         <div class="form-wrap form-wrap-secondary">
             <!-- Affichage des champs du formulaire d'inscription de l'utilisateur -->
             <div class="input-section-secondary">

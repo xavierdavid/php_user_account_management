@@ -252,6 +252,7 @@ class AccountController extends MainController
 
                         // On affecte la valeur du token à l'attribut de l'objet User
                         $user->setResetToken($resetToken);
+                        
                         // On enregistre la valeur en base de données
                         $isResetToken = $this->userManager->setResetTokenIntoDatabase($user, $resetToken);
                         
@@ -298,34 +299,107 @@ class AccountController extends MainController
     public function reset_password_verification($userSlug, $resetToken)
     {
         // On vérifie que le slug et le token de réinitialisation récupérés via l'url correspondent bien à un utilisateur stocké dans la base de données 
-        if($this->userManager->getUserBySlugAndResetToken($userSlug, $resetToken)){
-            // Si tel est le cas, on affiche le formulaire de réinitialisation du mot de passe à l'aide de la méthode new_password_form()
-            $this->new_password_form();
+        if($this->userManager->isUserWithSlugAndResetToken($userSlug, $resetToken)){
+            // Si tel est le cas, on affiche le formulaire de réinitialisation du mot de passe à l'aide de la méthode new_password_form() dans laquelle on passe le slug et resetToken de l'utilisateur en paramètres
+            $this->new_password_form($userSlug, $resetToken);
         } else {
             // Si tel n'est le cas, on affiche un message d'échec
             Utility::addAlertMessage("<i class='far fa-frown'></i> Votre compte n'a pas pu être réinitialisé ! Veuillez cliquer sur le lien de réinitialisation envoyé par mail !", Utility::DANGER_MESSAGE);
             // On redirige l'utilisateur vers la page de connexion
-            Utility::redirect(URL."connexion");
+            Utility::redirect(URL."formulaire_nouveau_mot_de_passe");
         }
     }
 
-   /**
-    * Contrôle le paramétrage et l'affichage de la page du formulaire de réinitialisation du mot de passe
-    *
-    * @return void
-    */
-    public function new_password_form()
+    /**
+     * Contrôle le paramétrage et l'affichage de la page du formulaire de saisie du mot de passe de l'utilisateur correspondant au slug et au token de réinitialisation
+     *
+     * @param [type] $userSlug
+     * @param [type] $resetToken
+     * @return void
+     */
+    public function new_password_form($userSlug, $resetToken)
     {
         // Définition d'un tableau associatif regroupant les données d'affichage de la page du formulaire de réinitialisation du mot de passe
         $data_page = [
             "page_description" => "Nouveau mot de passe",
-            "page_title" => "Formulaire de réinitialisation du mot de passe",
+            "page_title" => "Formulaire de saisie du nouveau mot de passe",
             "view" => "views/account/new_password.php",
-            "template" => "views/common/template.php"
+            "template" => "views/common/template.php",
+            "resetToken" => $resetToken,
+            "userSlug" => $userSlug
             ];
             // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données
             $this->generatePage($data_page);
+    }
 
-        // Si le slug et le token de réinitialisation ne sont pas valides
+    /**
+     * Contrôle le traitement du formulaire de saisie du nouveau mot de passe
+     *
+     * @return void
+     */
+    public function new_password_validation()
+    {
+        // Vérification de la soumission du formulaire de connexion
+        if(!empty($_POST)) {
+            // Vérification que tous les champs requis sont renseignés
+            if(isset($_POST['new_password'], $_POST['new_password_confirm']) && !empty($_POST['new_password']) && !empty($_POST['new_password_confirm'])) {
+                // Récupération, formatage et sécurisation des données du formulaire de saisie du nouveau mot de passe
+                $newPassword = Security::secureHtml($_POST['new_password']);
+                $newPasswordConfirm = Security::secureHtml($_POST['new_password_confirm']);
+                $userSlug = Security::secureHtml($_POST['userSlug']);
+                $resetToken = Security::secureHtml(($_POST['resetToken']));
+
+                // Si les deux mots de passe sont identiques
+                if($newPassword == $newPasswordConfirm) {
+                    // Hachage du mot de passe
+                    $hashNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+                    // On récupère en base de données une instance de la classe utilisateur correspondant au slug et au token transmis 
+                    $user = $this->userManager->getUserBySlugAndResetToken($userSlug, $resetToken);
+
+                    // Si la requête a abouti et qu'un utilisateur existe
+                    if($user) {
+
+                        // On affecte la valeur nouveau mot de passe hasché à l'attribut de l'objet User
+                        $user->setPassword($hashNewPassword);
+                            
+                        // On enregistre la valeur du nouveau mot de passe en base de données
+                        $isNewPasswordIntoDatabase = $this->userManager->setNewPasswordIntoDatabase($user, $hashNewPassword);
+                        
+                        // Si la requête d'enregistrement du nouveau mot de passe a abouti
+                        if($isNewPasswordIntoDatabase) {
+                            // Affichage d'un message d'alerte si l'utilisateur n'existe pas
+                            Utility::addAlertMessage("Votre mot de passe a bien été modifié. Veuillez vous connecter à votre compte en utilisant votre nouveau mot de passe ", Utility::SUCCESS_MESSAGE);
+    
+                            // Redirection de l'utilisateur vers la page de connexion
+                            Utility::redirect(URL."connexion");
+                        } else {
+                            // Affichage d'un message d'alerte
+                            Utility::addAlertMessage("Une erreur s'est produite !", Utility::DANGER_MESSAGE);
+                            
+                            // Redirection de l'utilisateur vers la page de réinitialisation
+                            Utility::redirect(URL."mot_de_passe_oublie");
+                        }
+                    } else {
+                        // Affichage d'un message d'alerte
+                        Utility::addAlertMessage("Une erreur s'est produite !", Utility::DANGER_MESSAGE);
+                            
+                        // Redirection de l'utilisateur vers la page de réinitialisation
+                        Utility::redirect(URL."mot_de_passe_oublie");
+                    }
+                } else {
+                    // Affichage d'un message d'alerte si les deux mots de passe ne sont pas identiques
+                    Utility::addAlertMessage("Les deux mots de passe ne sont pas identiques. Merci de bien vouloir renouveller votre saisie !", Utility::DANGER_MESSAGE); 
+                    // Redirection de l'utilisateur vers le formulaire de saisie du nouveau mot de passe
+                    Utility::redirect(URL."nouveau_mot_de_passe"."/".$userSlug."/".$resetToken);
+                }
+                
+            } else {
+                // Affichage d'un message d'alerte si le formulaire est incomplet
+                Utility::addAlertMessage("Le formulaire est incomplet, veuillez saisir votre nouveau mot de passe et le confirmer !", Utility::DANGER_MESSAGE);
+                // Redirection de l'utilisateur vers le formulaire de saisie du nouveau mot de passe
+                Utility::redirect(URL."nouveau_mot_de_passe"."/".$userSlug."/".$resetToken);
+            }
+        } 
     }
 }

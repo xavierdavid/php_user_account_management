@@ -5,7 +5,7 @@
     <div class="login-icon">
         <img src="<?= URL ?>/public/img/forgotten_password.png" alt="icône de mot de passe oublié">
     </div>
-    <form method="post" action="reinitialisation_mot_de_passe">
+    <form method="post" action="<?= URL ?>reinitialisation_mot_de_passe">
         <div class="form-wrap form-wrap-primary">
             <!-- Affichage des champs du formulaire de réinitialisation -->
             <div class="input-section-primary">

@@ -184,7 +184,7 @@ class UserManager extends Model
      * @param [type] $resetToken
      * @return void
      */
-    public function getUserBySlugAndResetToken($userSlug, $resetToken)
+    public function isUserWithSlugAndResetToken($userSlug, $resetToken)
     {
         // Définition de la requête
         $req = "SELECT * FROM user WHERE slug = :slug AND resetToken = :resetToken";
@@ -201,5 +201,59 @@ class UserManager extends Model
         $stmt->closeCursor();
         // On retourne le statut de la requête
         return $isRequestSuccess;
+    }
+
+    /**
+     * Permet de récupérer en base de données une instance de l'objet Utilisateur correspondant à un slug et un restToken
+     *
+     * @param [type] $userSlug
+     * @param [type] $resetToken
+     * @return void
+     */
+    public function getUserBySlugAndResetToken($userSlug, $resetToken)
+    {
+        // Définition de la requête
+        $req="SELECT * FROM user WHERE slug = :slug AND resetToken = :resetToken";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":slug", $userSlug, PDO::PARAM_STR);
+        $stmt->bindvalue(":resetToken", $resetToken, PDO::PARAM_STR);
+        // On définit le mode de récupération sous la forme d'une instance de la classe 'User'
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
+        // On exécute la requête 
+        $stmt->execute();
+        // On récupère le résultat (utilisateur)
+        $user = $stmt->fetch();
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le résultat la requête (utilisateur)
+        return $user;
+    }
+
+    /**
+     * Permet d'enregistrer en base de données un nouveau mot de passe pour une instance d'objet utilisateur User
+     *
+     * @param [type] $user
+     * @param [type] $hashNewPassword
+     * @return void
+     */
+    public function setNewPasswordIntoDatabase($user, $hashNewPassword)
+    {
+        // Définition de la requête
+        $req = "UPDATE user set password = :password WHERE email = :email";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":email", $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindValue(":password", $hashNewPassword, PDO::PARAM_STR);
+         // On exécute la requête 
+         $stmt->execute();
+         // On vérifie si la requête a abouti
+         $isNewPasswordIntoDatabase = $stmt->rowCount() > 0;
+         // On clôture la requête
+         $stmt->closeCursor();
+         // On retourne le statut de la requête
+         return $isNewPasswordIntoDatabase;
     }
 }

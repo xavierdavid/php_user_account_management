@@ -5,7 +5,7 @@
     <div class="login-icon">
         <img src="<?= URL ?>/public/img/profile-user.png" alt="icône de profil">
     </div>
-    <form method="post" action="validation_connexion">
+    <form method="post" action="<?= URL ?>validation_connexion">
         <div class="form-wrap form-wrap-primary">
             <!-- Affichage des champs du formulaire de connexion -->
             <div class="input-section-primary">
