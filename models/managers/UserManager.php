@@ -256,4 +256,29 @@ class UserManager extends Model
          // On retourne le statut de la requête
          return $isNewPasswordIntoDatabase;
     }
+
+    /**
+     * Permet d'enregistrer en base de données un nouvel email pour une instance d'objet utilisateur User
+     *
+     * @param [type] $user
+     * @return void
+     */
+    public function setUserNewEmailIntoDatabase($user, $newEmail)
+    {
+        // Définition de la requête
+        $req = "UPDATE user set email = :email WHERE id = :id";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":email", $newEmail, PDO::PARAM_STR);
+        $stmt->bindValue(":id",$user->getId(), PDO::PARAM_STR);
+         // On exécute la requête 
+         $stmt->execute();
+         // On vérifie si la requête a abouti
+         $isUserNewEmailIntoDatabase = $stmt->rowCount() > 0;
+         // On clôture la requête
+         $stmt->closeCursor();
+         // On retourne le statut de la requête
+         return $isUserNewEmailIntoDatabase;
+    }
 }

@@ -150,6 +150,7 @@ class AccountController extends MainController
         "page_description" => "Page de profil",
         "page_title" => "Page de profil",
         "user_data" => $userData,
+        "page_js" => ['edit-profile-email.js'],
         "view" => "views/account/profile.php",
         "template" => "views/common/template.php"
         ];
@@ -401,5 +402,65 @@ class AccountController extends MainController
                 Utility::redirect(URL."nouveau_mot_de_passe"."/".$userSlug."/".$resetToken);
             }
         } 
+    }
+
+    /**
+     * Contrôle le traitement du formulaire de modification d'email de l'utilisateur authentifié
+     *
+     * @return void
+     */
+    public function userEmailValidation()
+    {
+        // Vérification de la soumission du formulaire de modification
+        if(!empty($_POST)) {
+            // Vérification que tous les champs requis sont renseignés
+            if(isset($_POST['email'])) {
+                // Récupération, formatage et sécurisation des données du formulaire
+                $newEmail = Security::secureHtml($_POST['email']);
+                // Vérification que l'email saisi correspond au format 'email'
+                if(!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+                    // On affiche un message d'erreur
+                    Utility::addAlertMessage("L'email saisi n'est pas valide !", Utility::DANGER_MESSAGE);
+                    // Redirection de l'utilisateur vers la page de profil
+                    Utility::redirect(URL."compte/profil");
+                }
+                // On récupère en base de données une instance de la classe user correspondant à l'email de l'utilisateur en cours stocké dans la variable de session
+                $user = $this->userManager->getUserByEmail($_SESSION['user']['email']);
+
+                // On affecte la valeur du nouvel email saisi à l'attribut coorespondant de la classe User
+                $user->setEmail($newEmail);
+
+                // On enregistre la nouvelle valeur dans la base de données
+                $isUserNewEmailIntoDatabase = $this->userManager->setUserNewEmailIntoDatabase($user, $newEmail);
+                        
+                // Si la requête d'enregistrement du nouvel email a abouti
+                if($isUserNewEmailIntoDatabase) {
+                    // On stocke le nouvel email de l'utilisateur dans la session
+                    $_SESSION['user'] = [
+                        "email" => $user->getEmail()
+                    ];
+                    // Affichage d'un message de succès
+                    Utility::addAlertMessage("Votre nouvel email " . $user->getEmail() ." a bien été enregistré !", Utility::SUCCESS_MESSAGE);
+                    // On redirige l'utilisateur
+                    //Utility::redirect(URL."compte/profil");
+                } else {
+                     // Affichage d'un message d'alerte
+                    Utility::addAlertMessage("Aucune modification effectuée !", Utility::DANGER_MESSAGE); 
+                }
+                // On redirige l'utilisateur
+                Utility::redirect(URL."compte/profil");
+                    
+            } else {
+                // On affiche un message d'erreur
+                Utility::addAlertMessage("Merci de renseigner un nouvel email !", Utility::DANGER_MESSAGE);
+                // Redirection de l'utilisateur vers la page de profil
+                Utility::redirect(URL."compte/profil");
+            }
+        } else {
+           // Affichage d'un message d'alerte si le formulaire est incomplet
+           Utility::addAlertMessage("Le formulaire est incomplet, veuillez saisir un nouvel email !", Utility::DANGER_MESSAGE);
+           // Redirection de l'utilisateur vers le formulaire de saisie du nouveau mot de passe
+           Utility::redirect(URL."compte/profil");
+        }
     }
 }

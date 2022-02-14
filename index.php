@@ -66,6 +66,8 @@ try {
                         break;
                     case "deconnexion" : $accountController->logout();
                         break;
+                    case "validation_modification_email" : $accountController->userEmailValidation();
+                        break;
                         default:
                         // Dans les autres cas, on lance une exception
                         throw new Exception("La page demandée n'existe pas.");

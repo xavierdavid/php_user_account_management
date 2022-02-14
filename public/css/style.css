@@ -19,10 +19,12 @@
     --color-light: #D7D7D9;
     --color-dark:#333;
     --color-title: #ff7b14;
+    --color-title-dark: #d8650e;
     --color-text: #292929;
     --color-danger: #df0d37;
     --color-warning: #b36506;
     --color-success: #2c8d2c;
+    --color-success-dark: #145c14;
     --color-info:#034e6e;
     --color-white: #f1f1f1;
     --color-grey: #d6d1d1;
@@ -49,6 +51,13 @@
 .content {
     width: 100%;
     margin: 70px auto;
+}
+
+/*****************************************************/
+/***             Paramètres d'affichage            ***/
+/*****************************************************/
+.display-none {
+    display: none;
 }
 
 /*****************************************************/
@@ -111,6 +120,14 @@ p {
     cursor: pointer;
 }
 
+.button-small {
+    width: 50px;
+}
+
+.button-medium {
+    width: 150px;
+}
+
 .button-info {
     background-color: var(--color-title);
     border: 1px solid var(--color-white);
@@ -118,9 +135,33 @@ p {
 }
 
 .button-info:hover {
-    background-color: var(--color-primary);
+    background-color: var(--color-title-dark);
     color: #ffffff;
     transition: 0.8s;
+}
+
+.button-info:active {
+    background-color: var(--color-title);
+    color: #ffffff;
+    transform: translateY(4px);
+}
+
+.button-success {
+    background-color: var(--color-success);
+    border: 1px solid var(--color-white);
+    border-radius: 15px;
+}
+
+.button-success:hover {
+    background-color: var(--color-success-dark);
+    color: #ffffff;
+    transition: 0.8s;
+}
+
+.button-success:active {
+    background-color: var(--color-success);
+    color: #ffffff;
+    transform: translateY(4px);
 }
 
 /*****************************************************/
@@ -337,8 +378,12 @@ input:focus {
 /*****************************************************/
 /***                     Images                    ***/
 /*****************************************************/
-.largeSizeImage {
+.veryLargeSizeImage {
     width: 200px;
+}
+
+.largeSizeImage {
+    width: 160px;
 }
 
 .mediumSizeImage {
@@ -604,20 +649,95 @@ nav {
     margin-bottom: -110px;
 }
 
-.user-identity, .user-info {
+.user-identity, .user-info, .smiling-icon {
     width: 500px;
     margin: 25px;
 }
 
-.user-identity i {
-    font-size: 25px;
-    color: var(--color-title);
-    margin-right: 10px;
+.smiling-icon {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .user-identity h2 {
-    text-align: center;
+    text-align: left;
+    padding: 0px;
     color: var(--color-white);
+    margin-bottom: 30px;
+}
+
+.email-profile-wrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
+    width : 400px;
+    background: var(--color-white);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.email-profile-wrap i {
+    color: var(--color-white);
+    font-size: 15px; 
+    margin: auto;
+}
+
+.email-profile-wrap button {
+    margin-left: 75px;
+}
+
+.login-email-title {
+    color: var(--color-secondary);
+}
+
+.login-email {
+    color: var(--color-title);
+    font-weight: bold;
+}
+
+.email-edit-form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+    width: 400px;
+    border: 1px solid var(--color-white);
+    border-radius: 10px;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.email-edit-form label {
+    color: var(--color-white);
+}
+
+.email-edit-form input {
+    color: var(--color-dark);
+    background-color: var(--color-white);
+    margin: 0px 23px 0px 23px;
+    padding: 10px 30px;
+}
+
+.email-edit-form-return a {
+    color: var(--color-white);
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.email-edit-form-return a:hover {
+    color: var(--color-primary);
+}
+
+.email-edit-form-return i {
+    color: var(--color-title);
+    font-size: 12px;
+    margin-top: 15px;
 }
 
 .user-identity img {
@@ -635,13 +755,7 @@ nav {
 
 .user-info p {
     text-align: left;
-    color: var(--color-white);
-    padding: 10px 0px 10px 0px;
-}
-
-.user-info h3 {
-    text-align: left;
-    font-weight: bold;
+    color: var(--color-primary);
 }
 
 .user-info i {
