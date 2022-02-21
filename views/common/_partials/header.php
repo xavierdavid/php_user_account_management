@@ -38,13 +38,13 @@
                     <!-- Dropdown menu -->
                     <div class="dropdown-content">
                         <!-- Lien vers la page du compte utilisateur -->
-                        <a href="<?= URL?>compte/profil">Mon compte</a>
+                        <a href="<?=URL?>compte/profil">Mon compte</a>
                         <!-- Lien vers la page de modification du mot de passe -->
                         <a href="#">Editer mon profil</a>
                         <!-- Lien vers la page des publications -->
                         <a href="#">Blog de l'association</a>
                         <!-- Lien vers la page de modification du mot de passe -->
-                        <a href="#">Modifier mon mot de passe</a>
+                        <a href="<?=URL?>compte/modification_mot_de_passe">Modifier mon mot de passe</a>
                         <!-- Si l'utilisateur authentifié est administrateur -->
                         
                             <!-- On affiche le lien vers l'espace d'administration sécurisé -->

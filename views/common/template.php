@@ -51,7 +51,7 @@
     <script src="<?= URL ?>public/js/dropdown.js"></script>
     <script src="<?= URL ?>public/js/menu.js"></script>
     <?php if(!empty($page_js)) {
-        // Si d'autres fichiers css existent, on effectue le lien pour chacun d'entre-eux
+        // Si d'autres fichiers javascript existent, on effectue le lien pour chacun d'entre-eux
         foreach($page_js as $file_js) { ?>
             <script src="<?= URL ?>public/js/<?= $file_js ?>"></script>
         <?php }

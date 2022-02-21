@@ -463,4 +463,23 @@ class AccountController extends MainController
            Utility::redirect(URL."compte/profil");
         }
     }
+
+    /**
+     * Contrôle le paramétrage et l'affichage de la page du formulaire de modification du mot de passe de l'utilisateur authentifié
+     *
+     * @return void
+     */
+    public function password_modification()
+    {
+        // Définition d'un tableau associatif regroupant les données d'affichage de la page du formulaire de modification du mot de passe
+        $data_page = [
+            "page_description" => "Modification du mot de passe",
+            "page_title" => "Formulaire de modification du mot de passe",
+            "page_js" => ['confirm-new-password.js'],
+            "view" => "views/account/password_modification.php",
+            "template" => "views/common/template.php",
+            ];
+            // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données
+            $this->generatePage($data_page);
+    }
 }

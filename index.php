@@ -68,6 +68,8 @@ try {
                         break;
                     case "validation_modification_email" : $accountController->userEmailValidation();
                         break;
+                    case "modification_mot_de_passe" : $accountController->password_modification();
+                        break;
                         default:
                         // Dans les autres cas, on lance une exception
                         throw new Exception("La page demandée n'existe pas.");
