@@ -23,6 +23,10 @@
                     </div>
                     <button class="button button-small button-info" id="editEmailButton"><i class="fas fa-pen"></i></button>
                 </div>
+                <!-- Lien vers la modification des informations du profil -->
+                <div class="email-edit-form-return">
+                    <i class=" fas fa-location-arrow"></i><a href="<?=URL?>compte/profil"> Modifier mes informations</a>
+                </div>
             </div> 
             <!-- Formulaire de modification de l'email -->
             <div id="emailEditForm" class="email-edit-form-wrap display-none">
@@ -38,5 +42,7 @@
                         <i class="fas fa-undo"></i><a href="<?=URL?>compte/profil"> Retour</a>
                     </div>
                 </form>
-            </div>    
+            </div> 
+        </div> 
+    </div>  
 </section>

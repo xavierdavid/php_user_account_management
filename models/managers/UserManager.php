@@ -127,6 +127,32 @@ class UserManager extends Model
     }
 
     /**
+     * Permet de récupérer en base de données une instance de l'objet Utilisateur à partir de son identifiant unique (id)
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function getUserById($id)
+    {
+        // Définition de la requête
+        $req="SELECT * FROM user WHERE id = :id";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":id", $id, PDO::PARAM_STR);
+        // On définit le mode de récupération sous la forme d'une instance de la classe 'User'
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
+        // On exécute la requête 
+        $stmt->execute();
+        // On récupère le résultat (utilisateur)
+        $user = $stmt->fetch();
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le résultat la requête (utilisateur)
+        return $user;
+    }
+
+    /**
      * Permet d'enregistrer en base de données une nouvelle valeur de token d'activation de compte pour une instance d'objet utilisateur User
      *
      * @param [type] $user

@@ -70,6 +70,8 @@ try {
                         break;
                     case "modification_mot_de_passe" : $accountController->password_modification();
                         break;
+                    case "validation_modification_mot_de_passe" : $accountController->edit_password_validation();
+                        break;
                         default:
                         // Dans les autres cas, on lance une exception
                         throw new Exception("La page demandée n'existe pas.");

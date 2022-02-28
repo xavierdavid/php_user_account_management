@@ -78,6 +78,7 @@ class AccountController extends MainController
                             Utility::addAlertMessage("Connexion établie !", Utility::SUCCESS_MESSAGE);
                             // On stocke les informations de connexion de l'utilisateur dans la session
                             $_SESSION['user'] = [
+                                "id" => $user->getId(),
                                 "firstName" => $user->getFirstName(),
                                 "lastName" => $user->getLastName(),
                                 "email" => $user->getEmail(),
@@ -169,8 +170,8 @@ class AccountController extends MainController
         unset($_SESSION['user']);
         // Message d'alerte
         Utility::addAlertMessage("Déconnexion effectuée !", Utility::SUCCESS_MESSAGE);
-        // On redirige l'utilisateur vers la page d'accueil
-        Utility::redirect(URL."accueil");
+        // On redirige l'utilisateur vers la page de connexion
+        Utility::redirect(URL."connexion");
     }
 
     /**
@@ -435,9 +436,13 @@ class AccountController extends MainController
                         
                 // Si la requête d'enregistrement du nouvel email a abouti
                 if($isUserNewEmailIntoDatabase) {
-                    // On stocke le nouvel email de l'utilisateur dans la session
+                    // On actualise les informations de l'utilisateur (dont le nouveau mot de passe) dans la session
                     $_SESSION['user'] = [
-                        "email" => $user->getEmail()
+                        "id" => $user->getId(),
+                        "firstName" => $user->getFirstName(),
+                        "lastName" => $user->getLastName(),
+                        "email" => $user->getEmail(),
+                        "role" => $user->getRole()
                     ];
                     // Affichage d'un message de succès
                     Utility::addAlertMessage("Votre nouvel email " . $user->getEmail() ." a bien été enregistré !", Utility::SUCCESS_MESSAGE);
@@ -481,5 +486,75 @@ class AccountController extends MainController
             ];
             // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données
             $this->generatePage($data_page);
+    }
+
+    /**
+     * Contrôle le traitement du formulaire de modification du mot de passe de l'utilisateur authentifié
+     *
+     * @return void
+     */
+    public function edit_password_validation()
+    {
+        // Vérification de la soumission du formulaire de modification
+        if(!empty($_POST)) {
+            // Vérification que tous les champs requis sont renseignés
+            if(isset($_POST['oldPassword'], $_POST['newPassword'], $_POST['confirmNewPassword']) && !empty($_POST['oldPassword']) && !empty($_POST['newPassword']) && !empty($_POST['confirmNewPassword'])) {
+                // Récupération, formatage et sécurisation des données du formulaire
+                $oldPassword = Security::secureHtml($_POST['oldPassword']);
+                $newPassword = Security::secureHtml($_POST['newPassword']);
+                $confirmNewPassword = Security::secureHtml($_POST['confirmNewPassword']);
+                // Vérification que le nouveau mot de passe et la confirmation sont identiques
+                if($newPassword === $confirmNewPassword) {
+                    // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de sn identifiant stocké en session
+                    $user = $this->userManager->getUserById($_SESSION['user']['id']);
+                
+                    // Si l'utilisateur existe
+                    if($user) {
+                        // Si le mot de passe actuel saisi correspond au mot de passe de l'utilisateur enregistré en base de données
+                        if(password_verify($oldPassword, $user->getPassword())) {
+                            // On hashe le nouveau mot de passe saisie
+                            $newHashPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                            // On affecte le nouveau mot de passe à l'utilisateur en cours
+                            $user->setPassword($newHashPassword);
+                            // On enregistre le nouveau mot de passe hashé en base de données
+                            $isNewPasswordIntoDatabase = $this->userManager->setNewPasswordIntoDatabase($user, $newHashPassword);
+                            // On vérifie que la requête a abouti
+                            if($isNewPasswordIntoDatabase) {
+                                // On affiche un message de succès
+                                Utility::addAlertMessage("Votre mot de passe a été modifié avec succès", Utility::SUCCESS_MESSAGE);
+                                // On redirige l'utilisateur
+                                Utility::redirect(URL."compte/profil");
+                            } else {
+                                // On affiche un message d'erreur
+                                Utility::addAlertMessage("Une erreur est survenue", Utility::DANGER_MESSAGE);
+                                // On redirige l'utilisateur
+                                Utility::redirect(URL."compte/modification_mot_de_passe");
+                            }
+
+                        } else {
+                            // On affiche un message d'erreur
+                            Utility::addAlertMessage("Aucun utilisateur ne correspond au mot de passe actuel", Utility::DANGER_MESSAGE);
+                            // On redirige l'utilisateur
+                            Utility::redirect(URL."compte/modification_mot_de_passe");
+                        }
+                    } else {
+                        // On affiche un message d'erreur
+                        Utility::addAlertMessage("Utilisateur inconnu !", Utility::DANGER_MESSAGE);
+                        // On redirige l'utilisateur
+                        Utility::redirect(URL."compte/modification_mot_de_passe");
+                    }
+                } else {
+                    // On affiche un message d'erreur
+                    Utility::addAlertMessage("Les deux mots de passe ne sont pas identiques", Utility::DANGER_MESSAGE);
+                    // On redirige l'utilisateur
+                    Utility::redirect(URL."compte/modification_mot_de_passe");
+                }
+            } else {
+                // On affiche un message d'erreur
+                Utility::addAlertMessage("Toutes les informations n'ont pas été renseignées", Utility::DANGER_MESSAGE);
+                // On redirige l'utilisateur
+                Utility::redirect(URL."compte/modification_mot_de_passe");
+            }
+        }
     }
 }
