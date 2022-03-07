@@ -410,7 +410,7 @@ class AccountController extends MainController
      *
      * @return void
      */
-    public function userEmailValidation()
+    public function user_email_validation()
     {
         // Vérification de la soumission du formulaire de modification
         if(!empty($_POST)) {
@@ -505,7 +505,7 @@ class AccountController extends MainController
                 $confirmNewPassword = Security::secureHtml($_POST['confirmNewPassword']);
                 // Vérification que le nouveau mot de passe et la confirmation sont identiques
                 if($newPassword === $confirmNewPassword) {
-                    // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de sn identifiant stocké en session
+                    // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de son identifiant stocké en session
                     $user = $this->userManager->getUserById($_SESSION['user']['id']);
                 
                     // Si l'utilisateur existe
@@ -555,6 +555,30 @@ class AccountController extends MainController
                 // On redirige l'utilisateur
                 Utility::redirect(URL."compte/modification_mot_de_passe");
             }
+        }
+    }
+
+    /**
+     * Permet de contrôler la suppression du compte utilisateur 
+     *
+     * @return void
+     */
+    public function user_account_deletion() {
+        // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de son identifiant stocké en session
+        $user = $this->userManager->getUserById($_SESSION['user']['id']);
+        // On supprime l'utilisateur de la base de données
+        $isUserDelete = $this->userManager->deleteUserAccount($user);
+        // Si la requête abouti
+        if($isUserDelete) {
+            // On affiche un message à l'utilisateur
+            Utility::addAlertMessage("Votre compte a bien été supprimé !", Utility::SUCCESS_MESSAGE);
+            // On déconnecte l'utilisateur
+            $this->logout();
+        } else {
+            // On affiche un message à l'utilisateur
+            Utility::addAlertMessage("La suppression de votre compte a échoué ! Veuillez contacter l'administrateur.", Utility::DANGER_MESSAGE);
+            // On redirige l'utilisateur vers la page de profil
+            Utility::redirect(URL."compte/profil");
         }
     }
 }

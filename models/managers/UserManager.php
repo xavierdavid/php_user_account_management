@@ -307,4 +307,27 @@ class UserManager extends Model
          // On retourne le statut de la requête
          return $isUserNewEmailIntoDatabase;
     }
+
+    /**
+     * Permet de supprimer un utilisateur 
+     *
+     * @param [type] $user
+     * @return void
+     */  
+    public function deleteUserAccount ($user) {
+        // Définition de la requête
+        $req = "DELETE FROM user WHERE id = :id";
+        // Connexion à la base de données et préparation de la requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":id",$user->getId(), PDO::PARAM_STR);
+         // On exécute la requête 
+         $stmt->execute();
+         // On vérifie si la requête a abouti
+         $isUserDelete = $stmt->rowCount() > 0;
+         // On clôture la requête
+         $stmt->closeCursor();
+         // On retourne le statut de la requête
+         return $isUserDelete;
+    }
 }

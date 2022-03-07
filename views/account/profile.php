@@ -43,6 +43,18 @@
                     </div>
                 </form>
             </div> 
+           <!-- Bouton de suppression du compte -->
+            <button class="button modal-button button-large button-danger modal-trigger">Supprimer mon compte</button>
         </div> 
-    </div>  
+    </div> 
+    <!-- Fenêtre modale de suppression de compte -->
+    <div class="modal-container">
+        <div class="overlay modal-trigger"></div>
+         <div class="modal">
+            <button class="close-modal modal-trigger"><i class="fas fa-times"></i></button>
+            <h2>Suppression de votre compte</h2>
+            <p>Attention, vous vous apprêtez à supprimer votre compte. Merci de bien vouloir confirmer.</p>
+            <a href="<?= URL ?>compte/validation-suppression-compte" class="button button-medium button-danger">Confirmer</a>
+        </div>
+    </div> 
 </section>

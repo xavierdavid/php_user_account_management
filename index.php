@@ -66,11 +66,13 @@ try {
                         break;
                     case "deconnexion" : $accountController->logout();
                         break;
-                    case "validation_modification_email" : $accountController->userEmailValidation();
+                    case "validation_modification_email" : $accountController->user_email_validation();
                         break;
                     case "modification_mot_de_passe" : $accountController->password_modification();
                         break;
                     case "validation_modification_mot_de_passe" : $accountController->edit_password_validation();
+                        break;
+                    case "validation-suppression-compte" : $accountController->user_account_deletion();
                         break;
                         default:
                         // Dans les autres cas, on lance une exception

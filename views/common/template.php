@@ -49,6 +49,7 @@
 
     <!-- Javascript link -->
     <script src="<?= URL ?>public/js/dropdown.js"></script>
+    <script src="<?= URL ?>public/js/modal.js"></script>
     <script src="<?= URL ?>public/js/menu.js"></script>
     <?php if(!empty($page_js)) {
         // Si d'autres fichiers javascript existent, on effectue le lien pour chacun d'entre-eux
