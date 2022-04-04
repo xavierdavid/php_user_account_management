@@ -9,7 +9,7 @@ use PDO;
 class UserManager extends Model
 {
     /**
-     * Permet d'ajouter un nouvel utilisateur en base de données
+     * Permet d'ajouter un nouvel objet utilisateur en base de données
      *
      * @param User $user
      * @return void
@@ -49,7 +49,63 @@ class UserManager extends Model
         // On retourne le statut de la requête
         return $isRequestSuccess;
     }
-
+    
+    /**
+     * Permet de modifier un objet utilisateur en base de données
+     *
+     * @param [type] $user
+     * @return void
+     */
+    public function edit($user)
+    {
+        // Définition de la requête
+        $req = "UPDATE user set firstName = :firstName, lastName = :lastName, address = :address, phone = :phone, postal = :postal, city = :city, country = :country, coverImage = :coverImage, slug = :slug WHERE id = :id";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":firstName", $user->getFirstName(), PDO::PARAM_STR);
+        $stmt->bindValue(":lastName", $user->getLastName(), PDO::PARAM_STR);
+        $stmt->bindValue(":address", $user->getAddress(), PDO::PARAM_STR);
+        $stmt->bindValue(":phone", $user->getPhone(), PDO::PARAM_STR);
+        $stmt->bindValue(":postal", $user->getPostal(), PDO::PARAM_STR);
+        $stmt->bindValue(":city", $user->getCity(), PDO::PARAM_STR);
+        $stmt->bindValue(":country", $user->getCountry(), PDO::PARAM_STR);
+        $stmt->bindValue(":coverImage", $user->getCoverImage(), PDO::PARAM_STR);
+        $stmt->bindValue(":slug", $user->getSlug(), PDO::PARAM_STR);
+        $stmt->bindValue(":id", $user->getId(), PDO::PARAM_INT);
+        // On exécute la requête 
+        $stmt->execute();
+        // On vérifie si la requête a abouti
+        $isRequestSuccess = $stmt->rowCount() > 0;
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le statut de la requête
+        return $isRequestSuccess;
+    }
+    
+    /**
+     * Permet de supprimer un objet utilisateur en base de données
+     *
+     * @param [type] $user
+     * @return void
+     */  
+    public function delete($user) {
+        // Définition de la requête
+        $req = "DELETE FROM user WHERE id = :id";
+        // Connexion à la base de données et préparation de la requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":id",$user->getId(), PDO::PARAM_INT);
+         // On exécute la requête 
+         $stmt->execute();
+         // On vérifie si la requête a abouti
+         $isUserDelete = $stmt->rowCount() > 0;
+         // On clôture la requête
+         $stmt->closeCursor();
+         // On retourne le statut de la requête
+         return $isUserDelete;
+    }
+    
     /**
      * Permet de vérifier si l'email d'un utilisateur est présent en base de données
      *
@@ -308,26 +364,4 @@ class UserManager extends Model
          return $isUserNewEmailIntoDatabase;
     }
 
-    /**
-     * Permet de supprimer un utilisateur 
-     *
-     * @param [type] $user
-     * @return void
-     */  
-    public function deleteUserAccount ($user) {
-        // Définition de la requête
-        $req = "DELETE FROM user WHERE id = :id";
-        // Connexion à la base de données et préparation de la requête
-        $stmt = $this->getDataBase()->prepare($req);
-        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
-        $stmt->bindValue(":id",$user->getId(), PDO::PARAM_STR);
-         // On exécute la requête 
-         $stmt->execute();
-         // On vérifie si la requête a abouti
-         $isUserDelete = $stmt->rowCount() > 0;
-         // On clôture la requête
-         $stmt->closeCursor();
-         // On retourne le statut de la requête
-         return $isUserDelete;
-    }
 }

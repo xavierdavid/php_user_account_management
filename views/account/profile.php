@@ -25,7 +25,7 @@
                 </div>
                 <!-- Lien vers la modification des informations du profil -->
                 <div class="email-edit-form-return">
-                    <i class=" fas fa-location-arrow"></i><a href="<?=URL?>compte/profil"> Modifier mes informations</a>
+                    <i class=" fas fa-location-arrow"></i><a href="<?=URL?>compte/modification_profil"> Modifier mes informations</a>
                 </div>
             </div> 
             <!-- Formulaire de modification de l'email -->

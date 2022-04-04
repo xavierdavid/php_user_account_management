@@ -563,11 +563,12 @@ class AccountController extends MainController
      *
      * @return void
      */
-    public function user_account_deletion() {
+    public function user_account_deletion() 
+    {
         // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de son identifiant stocké en session
         $user = $this->userManager->getUserById($_SESSION['user']['id']);
         // On supprime l'utilisateur de la base de données
-        $isUserDelete = $this->userManager->deleteUserAccount($user);
+        $isUserDelete = $this->userManager->delete($user);
         // Si la requête abouti
         if($isUserDelete) {
             // On affiche un message à l'utilisateur
@@ -579,6 +580,138 @@ class AccountController extends MainController
             Utility::addAlertMessage("La suppression de votre compte a échoué ! Veuillez contacter l'administrateur.", Utility::DANGER_MESSAGE);
             // On redirige l'utilisateur vers la page de profil
             Utility::redirect(URL."compte/profil");
+        }
+    }
+
+    /**
+     * Permet de contrôler la modification des informations de profil par l'utilisateur
+     *
+     * @return void
+     */
+    public function user_profile_modification()
+    {
+        // On récupère une instance de l'utilisateur en cours à partir de la session
+        $user = $this->userManager->getUserById($_SESSION['user']['id']);
+
+        // Définition d'un tableau associatif regroupant les données d'affichage de la page du forumalaire de modification des informations du profil de l'utilisateur
+        $data_page = [
+            "page_description" => "Page de modification du profil",
+            "page_title" => "Page de modification du profil",
+            "user_data" => $user,
+            "view" => "views/account/edit_profile.php",
+            "template" => "views/common/template.php"
+            ];
+            // Affichage de la page à l'aide de la méthode generatePage à laquelle on envoie le tableau de données
+            $this->generatePage($data_page);
+    }
+
+    /**
+     * Permet de contrôler le traitement du formulaire de modification du profil de l'utilisateur
+     *
+     * @return void
+     */
+    public function profile_modification_validation() 
+    {
+        // Vérification de la soumission du formulaire
+        if(!empty($_POST)) {
+            // Vérification que tous les champs requis sont renseignés
+            if(isset($_POST['firstName'], $_POST['lastName'], $_POST['address'], $_POST['postal'], $_POST['city'], $_POST['country'], $_POST['phone'])
+            && !empty($_POST['firstName']) 
+            && !empty($_POST['lastName']) 
+            && !empty($_POST['address']) 
+            && !empty($_POST['postal']) 
+            && !empty($_POST['city']) 
+            && !empty($_POST['country'])
+            && !empty($_POST['phone'])){
+
+                // Récupération, formatage et sécurisation des données du formulaire
+                $firstName = Security::secureHtml(ucfirst($_POST['firstName']));
+                $lastName = Security::secureHtml(strtoupper($_POST['lastName']));
+                $address = Security::secureHtml($_POST['address']);
+                $postal = Security::secureHtml($_POST['postal']);
+                $city = Security::secureHtml(strtoupper($_POST['city']));
+                $country = Security::secureHtml(strtoupper($_POST['country']));
+                $phone = Security::secureHtml($_POST['phone']);
+
+                // Génération automatique du slug de l'utilisateur à l'aide de la fonction generateSlug(), à partir d'une chaîne composée de son nom et de son prénom
+                $text = $firstName . " " . $lastName;
+                $slug = Utility::generateSlug($text);
+
+                // Stockage des données modifiées de l'utilisateur dans un tableau associatif $userData
+                $userData = [
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                    'address' => $address,
+                    'postal' => $postal,
+                    'city' => $city,
+                    'country' => $country,
+                    'phone' => $phone,
+                    'slug' => $slug,
+                ];
+
+                // Stockage temporaire des données modifiées de l'utilisateur dans la session pour pré-remplir le formulaire de modification en cas d'erreur
+                $_SESSION['editUserData'] = $userData;
+
+                // Récupération d'une instance de l'utilisateur en cours 
+                $user = $this->userManager->getUserById($_SESSION['user']['id']);
+               
+                // Modification des informations de l'objet 'User' en cours
+                $user->setFirstName($firstName);
+                $user->setLastName($lastName);
+                $user->setAddress($address);
+                $user->setPostal($postal);
+                $user->setCity($city);
+                $user->setCountry($country);
+                $user->setPhone($phone);
+                
+                // On vérifie l'existence d'une image uploadée en testant sa taille
+                if($_FILES['coverImage']['size'] > 0) {
+                    // On définit le dossier cible des images de profil uploadées
+                    $dir = "public/img/users/";
+                    // On appelle la fonction d'upload d'images de la classe Utility pour renommer et stocker l'image dans le répertoire défini. Cette fonction créée et retourne un nom pour l'image. Ce nom est stocké dans la variable $coverImage
+                    $coverImage = Utility::uploadImage($_FILES['coverImage'], $dir); 
+                    // On récupère l'ancienne image de profil de l'utilisateur éventuellement stockée en base de données 
+                    $oldCoverImage = $user->getCoverImage();
+                    // Si cette image de profil existe réellement
+                    if($oldCoverImage) {
+                        // On supprime cette image du dossier 'img/users/'
+                        unlink("public/img/users/".$oldCoverImage);
+                    }
+                    // Puis on affecte le nom de l'image uploadée à l'attribut $coverImage de l'objet User en cours 
+                    $user->setCoverImage($coverImage);
+                }
+
+                // Si le tableau des erreurs de l'entité User n'est pas vide
+                if(!empty($user->getErrors())) {
+                    // On stocke le tableau des erreurs d'entité dans la session
+                    Utility::addFormErrorsIntoSession($user->getErrors());
+                    // On affiche un message d'alerte si le formulaire est incomplet
+                    Utility::addAlertMessage("Le formulaire n'a pas pu être soumis. Certains champs sont incomplets ou invalides !", Utility::DANGER_MESSAGE);
+                    // On redirige l'utilisateur vers la page d'inscription
+                    Utility::redirect(URL."compte/modification_profil"); 
+                } else {
+                    // S'il n'y a pas d'erreurs, on enregistre enfin les modifications de l'utilisateur en base de données
+                    $isRequestSuccess = $this->userManager->edit($user);
+                    // Si la requête de modification aboutit
+                    if($isRequestSuccess) {
+                        // On affiche un message d'alerte
+                        Utility::addAlertMessage("Votre profil a été modifié avec succès !", Utility::SUCCESS_MESSAGE);
+                        // On redirige l'utilisateur vers la page de profil
+                        Utility::redirect(URL."compte/profil");
+                    } else {
+                        // On affiche un message d'alerte
+                        Utility::addAlertMessage("Aucune modification effectuée !", Utility::DANGER_MESSAGE);
+                        // On redirige l'utilisateur vers la page de profil
+                        Utility::redirect(URL."compte/modification_profil");
+                    }
+                }
+                
+            } else {
+                // Affichage d'un message d'alerte si le formulaire est incomplet
+                Utility::addAlertMessage("Le formulaire est incomplet. Les champs requis sont obligatoires !", Utility::DANGER_MESSAGE);
+                // Redirection de l'utilisateur vers la page d'inscription
+                Utility::redirect(URL."compte/modification_profil");
+            }
         }
     }
 }

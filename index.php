@@ -74,6 +74,10 @@ try {
                         break;
                     case "validation-suppression-compte" : $accountController->user_account_deletion();
                         break;
+                    case "modification_profil" : $accountController->user_profile_modification();
+                        break;
+                    case "validation_modification_profil" : $accountController->profile_modification_validation();
+                        break;
                         default:
                         // Dans les autres cas, on lance une exception
                         throw new Exception("La page demandée n'existe pas.");

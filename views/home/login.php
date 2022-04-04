@@ -3,7 +3,7 @@
 <!-- Affichage du formulaire de connexion -->
 <section class="form-container form-container-primary">
     <div class="login-icon">
-        <img src="<?= URL ?>/public/img/profile-user.png" alt="icône de profil">
+        <img src="<?= URL ?>/public/img/login.png" alt="icône de profil">
     </div>
     <form method="post" action="<?= URL ?>validation_connexion">
         <div class="form-wrap form-wrap-primary">
