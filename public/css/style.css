@@ -469,8 +469,8 @@ nav {
 
 .btn-toggle-container {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 3px;
+    right: -50px;
     cursor: pointer;
     display: none;
 } 
@@ -480,20 +480,35 @@ nav {
     right: 15px;
     top: 50%; /* poussé de la moitié de hauteur du référent */
     transform: translateY(-50%); /* tiré de la moitié de sa propre hauteur */
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
-.item-login-logout span {
-    margin-right: 0px;
-    margin-left: 5px;
+.login-logout-elements {
+    display: flex;
+    align-items: center;
 }
 
-.item-login-logout a {
+.login-logout-elements a {
     text-decoration: none;
     color: var(--color-white);
 }
 
-.item-login-logout a:hover {
+.login-logout-elements a span {
+    margin-left: 8px;
+}
+
+.dropdown-link span {
+    margin-right: 0px;
+    margin-left: 10px;
+    cursor: default;
+}
+
+.dropdown-link a {
+    text-decoration: none;
+    color: var(--color-white);
+}
+
+.dropdown-link a:hover {
     color:var(--color-secondary);
 }
 
@@ -505,10 +520,7 @@ nav {
 .item-user-image img {
     height: 40px;
     border-radius: 50%;
-}
-
-.dropdown span {
-    margin-left: 5px;
+    cursor: default;
 }
 
 .dropdown:hover {
@@ -541,7 +553,7 @@ nav {
 .dropdown-content {
     display: none;
     position: absolute;
-    top: 30px;
+    top: 36px;
     right: -15px;
     cursor: pointer;
     background-color: var(--color-dark);
@@ -560,6 +572,7 @@ nav {
 /* Changement de couleur au survol des liens de la dropdown */
 .dropdown-content a:hover {
     background-color: var(--color-grey);
+    color: var(--color-info);
 }
 
 /* Icônes de login et logout */

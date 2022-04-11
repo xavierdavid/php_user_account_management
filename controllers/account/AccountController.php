@@ -81,6 +81,7 @@ class AccountController extends MainController
                                 "id" => $user->getId(),
                                 "firstName" => $user->getFirstName(),
                                 "lastName" => $user->getLastName(),
+                                "coverImage" => $user->getCoverImage(),
                                 "email" => $user->getEmail(),
                                 "role" => $user->getRole()
                             ];
@@ -144,7 +145,7 @@ class AccountController extends MainController
     public function profile()
     {
         // Récupération des données de l'utilisateur authentifié
-        $userData = $this->userManager->getUserByEmail($_SESSION['user']['email']);
+        $userData = $this->userManager->getUserById($_SESSION['user']['id']);
     
         // Définition d'un tableau associatif regroupant les données d'affichage de la page d'accueil du site
         $data_page = [
@@ -694,10 +695,20 @@ class AccountController extends MainController
                     $isRequestSuccess = $this->userManager->edit($user);
                     // Si la requête de modification aboutit
                     if($isRequestSuccess) {
+                        // On actualise la session de l'utilisateur en y intégrant l'image de profil
+                        $_SESSION['user'] = [
+                            "id" => $user->getId(),
+                            "firstName" => $user->getFirstName(),
+                            "lastName" => $user->getLastName(),
+                            "coverImage" => $user->getCoverImage(),
+                            "email" => $user->getEmail(),
+                            "role" => $user->getRole()
+                        ];
                         // On affiche un message d'alerte
                         Utility::addAlertMessage("Votre profil a été modifié avec succès !", Utility::SUCCESS_MESSAGE);
                         // On redirige l'utilisateur vers la page de profil
                         Utility::redirect(URL."compte/profil");
+
                     } else {
                         // On affiche un message d'alerte
                         Utility::addAlertMessage("Aucune modification effectuée !", Utility::DANGER_MESSAGE);

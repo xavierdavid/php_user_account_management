@@ -89,9 +89,14 @@
                                 ?> <div class="form-error">Le pays est invalide</div>
                             <?php }
                         } ?>
-                    <input type="text" name="country" id="country" placeholder="Veuillez saisir votre pays" required value="<?php if(!empty($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['country']);} else {echo ($user_data->getCountry());}?>">
-                        
+                    <input type="text" name="country" id="country" placeholder="Veuillez saisir votre pays" required value="<?php if(!empty($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['country']);} else {echo ($user_data->getCountry());}?>">      
+               
+                    <!-- Lien de retour vers la page de profil -->
+                    <div class="form-link">
+                        <p><a href="<?= URL ?>/compte/profil"><i class="fas fa-undo"></i> Retour vers la page de profil</a></p>
+                    </div>
                 </div>
+
                 <div class="input-section-footer">
                     <!-- Bouton de validation du formulaire -->
                     <div class="form-button">
