@@ -16,7 +16,9 @@
 
         <!-- Items de login et logout -->
         <div class="item-login-logout">
-            <div class="login-logout-elements">
+            
+            <!-- Utilisteur authentifié -->
+            <div class="authenticated-user-wrap">
                 <!-- Si un utilisateur est authentifié -->
                 <?php if(!empty($_SESSION['user'])) { ?>
                     <!-- On affiche le lien de la dropdown de navigation -->
@@ -37,7 +39,7 @@
                            <span> Hello <?= $_SESSION['user']['firstName']?> </span>
                         </a>    
                     </div>
-    
+
                     <!-- Elément dropdown -->
                     <div class="dropdown-box">
                         <!-- Dropdown menu -->
@@ -64,23 +66,25 @@
                             </div>
                         </div>
                     </div>
-                    <?php }?>
-                    
-                    <!-- Liens de connexion -->
-                    <?php if(empty($_SESSION['user'])) {?>
-                        <div>
-                        <a href="<?= URL ?>connexion"><i class="fas fa-sign-in-alt login-icon"></i><span> Connexion</span></a>
-                        <!-- Liens d'inscription -->
-                        <a href="<?= URL ?>inscription"><span> Inscription</span></a>
-                        </div>
-                    <?php } ?>  
-                
-                    <!-- Icône de menu hamburger responsive -->
-                    <div class="btn-toggle-container" role="button">
-                        <img src="<?= URL ?>public/img/hamburger.svg" alt="Icône du menu hamburger" class="hamburger-img">
-                    </div>
+                <?php }?>
             </div> 
+                
+            <!-- Utilisateur anonyme -->  
+            <div class="anonymous-user-wrap">
+                <!-- Si aucun utilisateur n'est authentifié-->
+                <?php if(empty($_SESSION['user'])) {?>
+                    <a href="<?= URL ?>connexion"><i class="fas fa-sign-in-alt "></i><span> Connexion</span></a>
+                    <!-- Liens d'inscription -->
+                    <a href="<?= URL ?>inscription"><span> Inscription</span></a>
+                <?php } ?>  
+            </div>
         </div>
+        
+        <!-- Icône de menu hamburger responsive -->
+        <div class="btn-toggle-container" role="button">
+            <img src="<?= URL ?>public/img/hamburger.svg" alt="Icône du menu hamburger" class="hamburger-img">
+        </div>
+        
     </nav>
 </header>
     
