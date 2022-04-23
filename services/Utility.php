@@ -2,6 +2,8 @@
 
 // Namespace des Services
 namespace App\Services;
+
+use Exception;
  
 class Utility 
 {
@@ -117,9 +119,8 @@ class Utility
     {
         // Si aucun fichier n'est envoyée via le formulaire 
         if(!isset($file['name']) && !empty($file['name'])) {
-            // Message d'erreur et redirection
-            self::addAlertMessage("Vous devez uploader un fichier image !", self::DANGER_MESSAGE);
-            self::redirect(URL."compte/modification_profil"); 
+            // On lance une exception
+            throw new Exception("Vous devez uploader un fichier image !");
         }
         // Si aucun répertoire cible n'est défini
         if(!file_exists($dir)) {
@@ -137,33 +138,28 @@ class Utility
     
         // Si le fichier temporaire n'a pas de taille ... 
         if(!getimagesize($file['tmp_name'])) {
-            // Message d'erreur et redirection
-            self::addAlertMessage("Erreur - Le fichier uploadé n'est pas une image !", self::DANGER_MESSAGE);
-            self::redirect(URL."compte/modification_profil"); 
+            // On lance une exception
+            throw new Exception("Erreur - Le fichier uploadé n'est pas une image !");
         }
         // si le fichier n'a pas l'extension caractéristique d'une image ...
         if($extension !== "jpg" && $extension !== "jpeg" && $extension !== "png" && $extension !== "gif"){
-            // Message d'erreur et redirection
-            self::addAlertMessage("Erreur - Le fichier uploadé n'est pas reconnu !", self::DANGER_MESSAGE);
-            self::redirect(URL."compte/modification_profil"); 
+            // On lance une exception
+            throw new Exception("Erreur - Le fichier uploadé n'est pas reconnu !");
         }
         // Si le fichier existe déjà dans le répertoire cible ...
         if(file_exists($target_file)) {
-            // Message d'erreur et redirection
-            self::addAlertMessage("Le fichier uploadé existe déjà !", self::DANGER_MESSAGE);
-            self::redirect(URL."compte/modification_profil"); 
+            // On lance une exception
+            throw new Exception("Le fichier uploadé existe déjà !");
         }
         // Si la taille de l'image est trop grande ...
         if($file['size'] > 800000) {
-            // Message d'erreur et redirection
-            self::addAlertMessage("Le fichier uploadé est trop volumineux !", self::DANGER_MESSAGE);
-            self::redirect(URL."compte/modification_profil"); 
+            // On lance une exception
+            throw new Exception("Le fichier uploadé est trop volumineux !");
         }
         // Si le fichier temporaire de l'image n'a pas été uploadé dans le répertoire cible ... 
         if(!move_uploaded_file($file['tmp_name'], $target_file)) {
-            // Message d'erreur et redirection
-            self::addAlertMessage("L'ajout de l'image a échoué !", self::DANGER_MESSAGE);
-            self::redirect(URL."compte/modification_profil"); 
+            // On lance une exception
+            throw new Exception("L'ajout de l'image a échoué !");
         } else {
             // Sinon, on upload par défaut le fichier et on retourne son nom pour son insertion en BD
             return ($random . "_" . $file['name']);

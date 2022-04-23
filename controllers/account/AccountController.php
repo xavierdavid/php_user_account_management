@@ -2,12 +2,13 @@
 
 namespace App\Controllers\Account;
 
+use Exception;
+use App\Services\Mail;
 use App\Services\Utility;
 use App\Services\Security;
+use App\Models\Entities\User;
 use App\Controllers\MainController;
 use App\Models\Managers\UserManager;
-use App\Models\Entities\User;
-use App\Services\Mail;
 
 
 class AccountController extends MainController
@@ -569,6 +570,10 @@ class AccountController extends MainController
     {
         // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de son identifiant stocké en session
         $user = $this->userManager->show($_SESSION['user']['id']);
+        // On récupère l'ancienne image de profil de l'utilisateur éventuellement stockée en base de données 
+        $oldCoverImage = $user->getCoverImage();
+        // On supprime cette image du dossier 'public/img/users/'
+        $this->deleteUserImageFile($oldCoverImage);
         // On supprime l'utilisateur de la base de données
         $isUserDelete = $this->userManager->delete($user);
         // Si la requête abouti
@@ -624,7 +629,7 @@ class AccountController extends MainController
             && !empty($_POST['postal']) 
             && !empty($_POST['city']) 
             && !empty($_POST['country'])
-            && !empty($_POST['phone'])){
+            && !empty($_POST['phone'])) {
 
                 // Récupération, formatage et sécurisation des données du formulaire
                 $firstName = Security::secureHtml(ucfirst($_POST['firstName']));
@@ -666,65 +671,74 @@ class AccountController extends MainController
                 $user->setCountry($country);
                 $user->setPhone($phone);
                 $user->setSlug($slug);
-                
+
                 // On vérifie l'existence d'une image uploadée en testant sa taille
                 if($_FILES['coverImage']['size'] > 0) {
                     // On définit le dossier cible des images de profil uploadées
                     $dir = "public/img/users/";
-                    // On appelle la fonction d'upload d'images de la classe Utility pour renommer et stocker l'image dans le répertoire défini. Cette fonction créée et retourne un nom pour l'image. Ce nom est stocké dans la variable $coverImage
-                    $coverImage = Utility::uploadImage($_FILES['coverImage'], $dir); 
-                    // On récupère l'ancienne image de profil de l'utilisateur éventuellement stockée en base de données 
-                    $oldCoverImage = $user->getCoverImage();
-                    // Si cette image de profil existe réellement
-                    if($oldCoverImage) {
-                        // On supprime cette image du dossier 'img/users/'
-                        unlink("public/img/users/".$oldCoverImage);
+                    try {
+                        // On appelle la fonction d'upload d'images de la classe Utility pour renommer et stocker l'image dans le répertoire défini. Cette fonction créée et retourne un nom pour l'image. Ce nom est stocké dans la variable $coverImage
+                        $coverImage = Utility::uploadImage($_FILES['coverImage'], $dir);   
+                        // On récupère l'ancienne image de profil de l'utilisateur éventuellement stockée en base de données 
+                        $oldCoverImage = $user->getCoverImage();
+                        // Si cette image de profil existe réellement
+                        if($oldCoverImage) {
+                            // On supprime cette image du dossier 'public/img/users/'
+                            $this->deleteUserImageFile($oldCoverImage);
+                        }
+                        // Puis on affecte le nom de l'image uploadée à l'attribut $coverImage de l'objet User en cours 
+                        $user->setCoverImage($coverImage);
+                    } catch (Exception $e ) {
+                        Utility::addAlertMessage($e->getMessage(), Utility::DANGER_MESSAGE);
+                        Utility::redirect(URL."compte/modification_profil");
                     }
-                    // Puis on affecte le nom de l'image uploadée à l'attribut $coverImage de l'objet User en cours 
-                    $user->setCoverImage($coverImage);
-                }
+                } 
 
                 // Si le tableau des erreurs de l'entité User n'est pas vide
                 if(!empty($user->getErrors())) {
                     // On stocke le tableau des erreurs d'entité dans la session
                     Utility::addFormErrorsIntoSession($user->getErrors());
-                    // On affiche un message d'alerte si le formulaire est incomplet
                     Utility::addAlertMessage("Le formulaire n'a pas pu être soumis. Certains champs sont incomplets ou invalides !", Utility::DANGER_MESSAGE);
-                    // On redirige l'utilisateur vers la page d'inscription
                     Utility::redirect(URL."compte/modification_profil"); 
                 } else {
-                    // S'il n'y a pas d'erreurs, on enregistre enfin les modifications de l'utilisateur en base de données
+                    // Sinon on enregistre les modifications en base de données et dans la session
                     $isRequestSuccess = $this->userManager->edit($user);
-                    // Si la requête de modification aboutit
-                    if($isRequestSuccess) {
-                        // On actualise la session de l'utilisateur en y intégrant l'image de profil
-                        $_SESSION['user'] = [
-                            "id" => $user->getId(),
-                            "firstName" => $user->getFirstName(),
-                            "lastName" => $user->getLastName(),
-                            "coverImage" => $user->getCoverImage(),
-                            "email" => $user->getEmail(),
-                            "role" => $user->getRole()
-                        ];
-                        // On affiche un message d'alerte
-                        Utility::addAlertMessage("Votre profil a été modifié avec succès !", Utility::SUCCESS_MESSAGE);
-                        // On redirige l'utilisateur vers la page de profil
-                        Utility::redirect(URL."compte/profil");
-
-                    } else {
-                        // On affiche un message d'alerte
-                        Utility::addAlertMessage("Aucune modification effectuée !", Utility::DANGER_MESSAGE);
-                        // On redirige l'utilisateur vers la page de profil
-                        Utility::redirect(URL."compte/modification_profil");
-                    }
+                    $_SESSION['user'] = [
+                        "id" => $user->getId(),
+                        "firstName" => $user->getFirstName(),
+                        "lastName" => $user->getLastName(),
+                        "coverImage" => $user->getCoverImage(),
+                        "email" => $user->getEmail(),
+                        "role" => $user->getRole()
+                    ];
+                    Utility::addAlertMessage("Votre profil a été modifié avec succès !", Utility::SUCCESS_MESSAGE);
+                    Utility::redirect(URL."compte/profil");
                 }
-                
+
             } else {
-                // Affichage d'un message d'alerte si le formulaire est incomplet
-                Utility::addAlertMessage("Le formulaire est incomplet. Les champs requis sont obligatoires !", Utility::DANGER_MESSAGE);
-                // Redirection de l'utilisateur vers la page d'inscription
-                Utility::redirect(URL."compte/modification_profil");
+               // Affichage d'un message d'alerte si le formulaire est incomplet
+               Utility::addAlertMessage("Le formulaire est incomplet. Les champs requis sont obligatoires !", Utility::DANGER_MESSAGE);
+               // Redirection de l'utilisateur vers la page d'inscription
+               Utility::redirect(URL."compte/modification_profil"); 
             }
-        }
+        }      
     }
+
+    /**
+     * Permet de gérer la suppression de l'image de l'utilisateur du dossier public/img/users
+     *
+     * @param [type] $oldCoverImage
+     * @return void
+     */
+    private function deleteUserImageFile($oldCoverImage)
+    {
+        unlink("public/img/users/".$oldCoverImage);
+    }
+
 }
+
+
+
+
+
+
