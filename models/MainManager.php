@@ -4,11 +4,11 @@
 namespace App\Models;
 
 // Utilisation de la classe Model associée au namespace des Models
-use App\Models\Model;
+use App\Models\Database;
 // Utilisation de la classe PDO
 use PDO;
 
-class MainManager extends Model
+class MainManager extends Database
 {
     /**
      * Permet de récupérer des données stockées dans la base

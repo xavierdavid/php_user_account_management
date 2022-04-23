@@ -22,20 +22,20 @@ $accountController = new AccountController;
 // Définition d'une constante d'URL contenant le chemin absolu du site
 define("URL", str_replace("index.php","",(isset($_SERVER['HTTPS']) ? "https" : "http")."://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
 
-// Mise en place du système de routage du site
+// Mise en place du système de routage du site - Gestion des paramètres 'page' de l'url
 try {
-    // Si aucun paramètre 'page' n'existe dans l'url
+    // Si aucun paramètre n'est envoyé dans dans la variable 'page' de l'url
     if(empty($_GET['page'])) {
         // Alors on demande l'affichage de la page d'accueil 
         $page = "accueil";
     } else {
-        // Sinon, on scinde et on filtre l'url pour l'analyser
-        $url = explode("/", filter_var($_GET['page'], FILTER_SANITIZE_URL));
-        // On récupère le 1er élément de l'url et on le stocke dans la variable "$page"
-        $page = $url[0];
+        // Si des paramètres sont envoyés dans la variable 'page' de l'url, on les sépare, on les nettoie et on les stocke dans un tableau
+        $urlParameters = explode("/", filter_var($_GET['page'], FILTER_SANITIZE_URL));
+        // On récupère le 1er paramètre de l'url et on le stocke dans la variable "$page"
+        $page = $urlParameters[0];
     }
 
-    // On teste la valeur des éléments de l'url et on appelle les contrôleurs appropriés
+    // On teste la valeur des paramètres de l'url et on appelle les contrôleurs appropriés
     switch ($page) {
         case "accueil": $homeController->home();
             break;
@@ -43,7 +43,7 @@ try {
             break;
         case "validation_inscription" : $homeController->register_validation();
             break;
-        case "activation_compte" : $accountController->account_activation($url[1], $url[2]);
+        case "activation_compte" : $accountController->account_activation($urlParameters[1], $urlParameters[2]);
             break;
         case "connexion" : $homeController->login();
             break;
@@ -53,15 +53,15 @@ try {
             break;
         case "reinitialisation_mot_de_passe" : $accountController->reset_password();
             break;
-        case "nouveau_mot_de_passe" : $accountController->reset_password_verification($url[1], $url[2]);
+        case "nouveau_mot_de_passe" : $accountController->reset_password_verification($urlParameters[1], $urlParameters[2]);
             break;
         case "validation_nouveau_mot_de_passe" : $accountController->new_password_validation();
             break;
         case "compte" :
-            // Vérification de l'authentification de l'utlisateur
+            // Vérification de l'authentification de l'utilisateur
             if(Security::isAuthenticated()) {
-                // On teste le 2ème élément de l'url
-                switch ($url[1]) {
+                // On teste le 2ème paramètre de l'url
+                switch ($urlParameters[1]) {
                     case "profil" : $accountController->profile();
                         break;
                     case "deconnexion" : $accountController->logout();

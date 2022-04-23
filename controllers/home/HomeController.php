@@ -99,7 +99,6 @@ class HomeController extends MainController
                 $postal = Security::secureHtml($_POST['postal']);
                 $city = Security::secureHtml(strtoupper($_POST['city']));
                 $country = Security::secureHtml(strtoupper($_POST['country']));
-                $coverImage = Security::secureHtml($_POST['coverImage']);
                 $phone = Security::secureHtml($_POST['phone']);
                 $email = Security::secureHtml($_POST['email']);
                 $password = Security::secureHtml($_POST['password']);
@@ -150,7 +149,6 @@ class HomeController extends MainController
                     'postal' => $postal,
                     'city' => $city,
                     'country' => $country,
-                    'coverImage' => $coverImage,
                     'phone' => $phone,
                     'email' => $email,
                     'password' => $hashPassword,

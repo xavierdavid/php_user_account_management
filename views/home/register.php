@@ -77,9 +77,6 @@
                 </div>
 
                 <div class="input-section-secondary">
-                    <!-- Champ photo de profil -->
-                    <label for="coverImage">Photo de profil</label>
-                    <input type="text" name="coverImage" id="coverImage" placeholder="Votre photo de profil">
 
                     <!-- champ téléphone -->
                     <label for="phone">Téléphone <span>*</span></label>

@@ -144,8 +144,8 @@ class AccountController extends MainController
      */
     public function profile()
     {
-        // Récupération des données de l'utilisateur authentifié
-        $userData = $this->userManager->getUserById($_SESSION['user']['id']);
+        // Récupération des données de l'utilisateur authentifié à partir de son identifiant
+        $userData = $this->userManager->show($_SESSION['user']['id']);
     
         // Définition d'un tableau associatif regroupant les données d'affichage de la page d'accueil du site
         $data_page = [
@@ -172,7 +172,7 @@ class AccountController extends MainController
         // Message d'alerte
         Utility::addAlertMessage("Déconnexion effectuée !", Utility::SUCCESS_MESSAGE);
         // On redirige l'utilisateur vers la page de connexion
-        Utility::redirect(URL."connexion");
+        Utility::redirect(URL."accueil");
     }
 
     /**
@@ -442,6 +442,7 @@ class AccountController extends MainController
                         "id" => $user->getId(),
                         "firstName" => $user->getFirstName(),
                         "lastName" => $user->getLastName(),
+                        "coverImage" => $user->getCoverImage(),
                         "email" => $user->getEmail(),
                         "role" => $user->getRole()
                     ];
@@ -507,7 +508,7 @@ class AccountController extends MainController
                 // Vérification que le nouveau mot de passe et la confirmation sont identiques
                 if($newPassword === $confirmNewPassword) {
                     // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de son identifiant stocké en session
-                    $user = $this->userManager->getUserById($_SESSION['user']['id']);
+                    $user = $this->userManager->show($_SESSION['user']['id']);
                 
                     // Si l'utilisateur existe
                     if($user) {
@@ -567,7 +568,7 @@ class AccountController extends MainController
     public function user_account_deletion() 
     {
         // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de son identifiant stocké en session
-        $user = $this->userManager->getUserById($_SESSION['user']['id']);
+        $user = $this->userManager->show($_SESSION['user']['id']);
         // On supprime l'utilisateur de la base de données
         $isUserDelete = $this->userManager->delete($user);
         // Si la requête abouti
@@ -585,16 +586,16 @@ class AccountController extends MainController
     }
 
     /**
-     * Permet de contrôler la modification des informations de profil par l'utilisateur
+     * Permet de contrôler le paramétrage et l'affichage de la page du formulaire de modification des informations de profil de l'utilisateur
      *
      * @return void
      */
     public function user_profile_modification()
     {
         // On récupère une instance de l'utilisateur en cours à partir de la session
-        $user = $this->userManager->getUserById($_SESSION['user']['id']);
+        $user = $this->userManager->show($_SESSION['user']['id']);
 
-        // Définition d'un tableau associatif regroupant les données d'affichage de la page du forumalaire de modification des informations du profil de l'utilisateur
+        // Définition d'un tableau associatif regroupant les données d'affichage de la page du formulaire de modification des informations du profil de l'utilisateur
         $data_page = [
             "page_description" => "Page de modification du profil",
             "page_title" => "Page de modification du profil",
@@ -654,7 +655,7 @@ class AccountController extends MainController
                 $_SESSION['editUserData'] = $userData;
 
                 // Récupération d'une instance de l'utilisateur en cours 
-                $user = $this->userManager->getUserById($_SESSION['user']['id']);
+                $user = $this->userManager->show($_SESSION['user']['id']);
                
                 // Modification des informations de l'objet 'User' en cours
                 $user->setFirstName($firstName);
@@ -664,6 +665,7 @@ class AccountController extends MainController
                 $user->setCity($city);
                 $user->setCountry($country);
                 $user->setPhone($phone);
+                $user->setSlug($slug);
                 
                 // On vérifie l'existence d'une image uploadée en testant sa taille
                 if($_FILES['coverImage']['size'] > 0) {

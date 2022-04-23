@@ -18,7 +18,7 @@
                                 ?> <div class="form-error">Le prénom est invalide. Il doit comporter au moins 3 caractères</div>
                             <?php }                                     
                         } ?>
-                    <input type="text" name="firstName" id="firstName" placeholder="Veuillez saisir votre prénom" required value="<?php if(isset($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['firstName']);} else {echo ($user_data->getFirstName());}?>">
+                    <input type="text" name="firstName" id="firstName" placeholder="Veuillez saisir votre prénom" required value="<?php echo ($user_data->getFirstName());?>">
         
                     <!-- champ nom -->      
                     <label for="lastName">Nom <span>*</span></label>
@@ -28,7 +28,7 @@
                                 ?> <div class="form-error">Le nom est invalide. Il doit comporter au moins 2 caractères</div>
                             <?php } 
                         } ?>
-                    <input type="text" name="lastName" id="lastName" placeholder="Veuillez saisir votre nom" required value="<?php if(!empty($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['lastName']);} else {echo ($user_data->getLastName());}?>">
+                    <input type="text" name="lastName" id="lastName" placeholder="Veuillez saisir votre nom" required value="<?php echo ($user_data->getLastName());?>">
 
                     <!-- Champ photo de profil -->
                     <label for="coverImage">Photo de profil</label>
@@ -43,7 +43,7 @@
                                 ?> <div class="form-error">Le téléphone est invalide</div>
                             <?php }
                         } ?>
-                    <input type="text" name="phone" id="phone" placeholder="Votre numéro de téléphone" required value="<?php if(!empty($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['phone']);} else {echo ($user_data->getPhone());}?>">
+                    <input type="text" name="phone" id="phone" placeholder="Votre numéro de téléphone" required value="<?php echo ($user_data->getPhone());?>">
                 </div>
 
                 <div class="input-section-secondary">
@@ -56,7 +56,7 @@
                                 ?> <div class="form-error">L'adresse est invalide</div>
                             <?php } 
                         } ?>
-                    <input type="text" name="address" id="address" placeholder="Veuillez saisir votre adresse" required value="<?php if(!empty($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['address']);} else {echo ($user_data->getAddress());}?>">
+                    <input type="text" name="address" id="address" placeholder="Veuillez saisir votre adresse" required value="<?php echo ($user_data->getAddress());?>">
 
                     <!-- champ code postal -->
                     <label for="postal">Code postal <span>*</span></label>
@@ -67,7 +67,7 @@
                                 ?> <div class="form-error">Le code postal est invalide</div>
                             <?php }
                         } ?>
-                    <input type="text" name="postal" id="postal" placeholder="Veuillez saisir votre code postal" required value="<?php if(!empty($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['postal']);} else {echo ($user_data->getPostal());}?>">
+                    <input type="text" name="postal" id="postal" placeholder="Veuillez saisir votre code postal" required value="<?php echo ($user_data->getPostal());?>">
 
                     <!-- champ ville -->
                     <label for="city">Ville <span>*</span></label>
@@ -78,7 +78,7 @@
                                 ?> <div class="form-error">La ville est invalide</div>
                             <?php }
                         } ?>
-                    <input type="text" name="city" id="city" placeholder="Veuillez saisir votre ville" required value="<?php if(!empty($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['city']);} else {echo ($user_data->getCity());}?>">
+                    <input type="text" name="city" id="city" placeholder="Veuillez saisir votre ville" required value="<?php echo ($user_data->getCity());?>">
 
                     <!-- champ pays -->
                     <label for="country">Pays <span>*</span></label>
@@ -89,7 +89,7 @@
                                 ?> <div class="form-error">Le pays est invalide</div>
                             <?php }
                         } ?>
-                    <input type="text" name="country" id="country" placeholder="Veuillez saisir votre pays" required value="<?php if(!empty($_SESSION['editUserData'])){echo ($_SESSION['editUserData']['country']);} else {echo ($user_data->getCountry());}?>">      
+                    <input type="text" name="country" id="country" placeholder="Veuillez saisir votre pays" required value="<?php echo ($user_data->getCountry());?>">      
                
                     <!-- Lien de retour vers la page de profil -->
                     <div class="form-link">

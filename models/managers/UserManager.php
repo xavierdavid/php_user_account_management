@@ -2,11 +2,11 @@
 
 namespace App\Models\Managers;
 
-use App\Models\Model;
+use App\Models\Database;
 use App\Models\Entities\User;
 use PDO;
 
-class UserManager extends Model
+class UserManager extends Database
 {
     /**
      * Permet d'ajouter un nouvel objet utilisateur en base de données
@@ -53,10 +53,10 @@ class UserManager extends Model
     /**
      * Permet de modifier un objet utilisateur en base de données
      *
-     * @param [type] $user
+     * @param User $user
      * @return void
      */
-    public function edit($user)
+    public function edit(User $user)
     {
         // Définition de la requête
         $req = "UPDATE user set firstName = :firstName, lastName = :lastName, address = :address, phone = :phone, postal = :postal, city = :city, country = :country, coverImage = :coverImage, slug = :slug WHERE id = :id";
@@ -86,10 +86,10 @@ class UserManager extends Model
     /**
      * Permet de supprimer un objet utilisateur en base de données
      *
-     * @param [type] $user
+     * @param User $user
      * @return void
      */  
-    public function delete($user) {
+    public function delete(User $user) {
         // Définition de la requête
         $req = "DELETE FROM user WHERE id = :id";
         // Connexion à la base de données et préparation de la requête
@@ -104,6 +104,32 @@ class UserManager extends Model
          $stmt->closeCursor();
          // On retourne le statut de la requête
          return $isUserDelete;
+    }
+
+ /**
+     * Permet de récupérer en base de données une instance de l'objet Utilisateur à partir de son identifiant unique (id)
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function show($id)
+    {
+        // Définition de la requête
+        $req="SELECT * FROM user WHERE id = :id";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":id", $id, PDO::PARAM_STR);
+        // On définit le mode de récupération sous la forme d'une instance de la classe 'User'
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
+        // On exécute la requête 
+        $stmt->execute();
+        // On récupère le résultat (utilisateur)
+        $user = $stmt->fetch();
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le résultat la requête (utilisateur)
+        return $user;
     }
     
     /**
@@ -170,32 +196,6 @@ class UserManager extends Model
         $stmt = $this->getDataBase()->prepare($req);
         // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
         $stmt->bindValue(":email", $email, PDO::PARAM_STR);
-        // On définit le mode de récupération sous la forme d'une instance de la classe 'User'
-        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
-        // On exécute la requête 
-        $stmt->execute();
-        // On récupère le résultat (utilisateur)
-        $user = $stmt->fetch();
-        // On clôture la requête
-        $stmt->closeCursor();
-        // On retourne le résultat la requête (utilisateur)
-        return $user;
-    }
-
-    /**
-     * Permet de récupérer en base de données une instance de l'objet Utilisateur à partir de son identifiant unique (id)
-     *
-     * @param [type] $id
-     * @return void
-     */
-    public function getUserById($id)
-    {
-        // Définition de la requête
-        $req="SELECT * FROM user WHERE id = :id";
-        // Connexion à la base de données et préparation d'une requête
-        $stmt = $this->getDataBase()->prepare($req);
-        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
-        $stmt->bindValue(":id", $id, PDO::PARAM_STR);
         // On définit le mode de récupération sous la forme d'une instance de la classe 'User'
         $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
         // On exécute la requête 

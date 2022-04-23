@@ -6,9 +6,15 @@ namespace App\Models;
 // Utilisation de la classe PDO
 use PDO;
 
-abstract class Model
+abstract class Database
 {
     private static $pdo;
+
+    // Informations de connexion - Constantes de classe
+    private const DBHOST = 'localhost';
+    private const DBUSER = 'root';
+    private const DBPASS = '';
+    private const DBNAME = 'accountmanager';
 
     /**
      * Permet de créer une instance de la classe PDO pour établir la connexion à la base de données
@@ -17,7 +23,7 @@ abstract class Model
      */
     private static function setDataBase()
     {
-        self::$pdo = new PDO('mysql:host=localhost;dbname=accountmanager;charset=utf8','root','');
+        self::$pdo = new PDO('mysql:host='.self::DBHOST.';dbname='.self::DBNAME.';charset=utf8',self::DBUSER,self::DBPASS);
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
     }
 
