@@ -165,4 +165,16 @@ class Utility
             return ($random . "_" . $file['name']);
         }
     }
+
+    /**
+     * Permet de gérer la suppression de l'image $oldCoverImage de l'utilisateur du dossier $dir
+     *
+     * @param [type] $path
+     * @param [type] $oldCoverImage
+     * @return void
+     */
+    public static function deleteUserImageFile($dir, $oldCoverImage)
+    {
+        unlink($dir.$oldCoverImage);
+    }
 }

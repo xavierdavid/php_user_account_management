@@ -573,7 +573,8 @@ class AccountController extends MainController
         // On récupère l'ancienne image de profil de l'utilisateur éventuellement stockée en base de données 
         $oldCoverImage = $user->getCoverImage();
         // On supprime cette image du dossier 'public/img/users/'
-        $this->deleteUserImageFile($oldCoverImage);
+        $dir = "public/img/users/";
+        Utility::deleteUserImageFile($dir,$oldCoverImage);
         // On supprime l'utilisateur de la base de données
         $isUserDelete = $this->userManager->delete($user);
         // Si la requête abouti
@@ -662,7 +663,7 @@ class AccountController extends MainController
                 // Récupération d'une instance de l'utilisateur en cours 
                 $user = $this->userManager->show($_SESSION['user']['id']);
                
-                // Modification des informations de l'objet 'User' en cours
+                // Modification des informations de l'objet 'User' en cours 
                 $user->setFirstName($firstName);
                 $user->setLastName($lastName);
                 $user->setAddress($address);
@@ -684,7 +685,7 @@ class AccountController extends MainController
                         // Si cette image de profil existe réellement
                         if($oldCoverImage) {
                             // On supprime cette image du dossier 'public/img/users/'
-                            $this->deleteUserImageFile($oldCoverImage);
+                            Utility::deleteUserImageFile($dir,$oldCoverImage);
                         }
                         // Puis on affecte le nom de l'image uploadée à l'attribut $coverImage de l'objet User en cours 
                         $user->setCoverImage($coverImage);
@@ -701,7 +702,7 @@ class AccountController extends MainController
                     Utility::addAlertMessage("Le formulaire n'a pas pu être soumis. Certains champs sont incomplets ou invalides !", Utility::DANGER_MESSAGE);
                     Utility::redirect(URL."compte/modification_profil"); 
                 } else {
-                    // Sinon on enregistre les modifications en base de données et dans la session
+                    // Sinon on enregistre les modifications en base de données et on actualise la session
                     $isRequestSuccess = $this->userManager->edit($user);
                     $_SESSION['user'] = [
                         "id" => $user->getId(),
@@ -724,16 +725,6 @@ class AccountController extends MainController
         }      
     }
 
-    /**
-     * Permet de gérer la suppression de l'image de l'utilisateur du dossier public/img/users
-     *
-     * @param [type] $oldCoverImage
-     * @return void
-     */
-    private function deleteUserImageFile($oldCoverImage)
-    {
-        unlink("public/img/users/".$oldCoverImage);
-    }
 
 }
 
