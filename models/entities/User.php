@@ -23,6 +23,7 @@ class User
     private $createdAt;
     private $isRgpd;
     private $resetToken;
+    private $isMember;
     private $errors=[]; // Attribut spécifique stockant les éventuelles erreurs dans un tableau
 
     // Constantes de classe
@@ -384,6 +385,19 @@ class User
             // Alors on affecte la valeur $resetToken à l'attribut de l'objet en cours
             // Contrôle de validité - $resetToken doit être une chaîne
             $this->resetToken = (string) $resetToken;
+            return $this;
+        }
+    }
+
+    public function getIsMember()
+    {
+        return $this->isMember;
+    }
+
+    public function setIsMember(int $isMember)
+    {
+        if(isset($isMember)) {
+            $this->isMember = (int) $isMember;
             return $this;
         }
     }

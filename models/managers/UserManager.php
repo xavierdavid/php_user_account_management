@@ -18,8 +18,8 @@ class UserManager extends Database
     {
         // Définition de la requête
         $req = "
-        INSERT INTO user (firstName, lastName, address, phone, postal, city, country, coverImage, email, password, slug, activationToken, isValid, role, createdAt, isRgpd) 
-        VALUES(:firstName, :lastName, :address, :phone, :postal, :city, :country, :coverImage, :email, :password, :slug, :activationToken, :isValid, :role, :createdAt, :isRgpd)
+        INSERT INTO user (firstName, lastName, address, phone, postal, city, country, coverImage, email, password, slug, activationToken, isValid, role, createdAt, isRgpd, isMember) 
+        VALUES(:firstName, :lastName, :address, :phone, :postal, :city, :country, :coverImage, :email, :password, :slug, :activationToken, :isValid, :role, :createdAt, :isRgpd, :isMember)
         ";
         // Connexion à la base de données et préparation d'une requête
         $stmt = $this->getDataBase()->prepare($req);
@@ -40,6 +40,7 @@ class UserManager extends Database
         $stmt->bindValue(":role", $user->getRole(), PDO::PARAM_STR);
         $stmt->bindValue(":createdAt", $user->getCreatedAt(), PDO::PARAM_STR);
         $stmt->bindValue(":isRgpd", $user->getIsRgpd(), PDO::PARAM_INT);
+        $stmt->bindValue(":isMember", $user->getIsMember(), PDO::PARAM_INT);
         // On exécute la requête 
         $stmt->execute();
         // On vérifie si la requête a abouti

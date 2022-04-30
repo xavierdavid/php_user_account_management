@@ -135,6 +135,9 @@ class HomeController extends MainController
                 // Statut de l'activation par email (0 par défaut)
                 $isValid = 0;
 
+                // Affectation par défaut du statut de 'non membre' de l'utilisateur
+                $isMember = 0;
+
                 // Génération du rôle de l'utilisateur par défaut
                 $role = "ROLE_USER";
 
@@ -157,7 +160,8 @@ class HomeController extends MainController
                     'isValid' => $isValid,
                     'role' => $role,
                     'createdAt' => $createdAt,
-                    'isRgpd' => $isRgpd
+                    'isRgpd' => $isRgpd,
+                    'isMember' => $isMember
                 ];
 
                 // Stockage temporaire des données de l'utilisateur dans la session pour pré-remplir le formulaire en cas d'erreur
