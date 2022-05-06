@@ -78,6 +78,28 @@ try {
                         break;
                     case "validation_modification_profil" : $accountController->profile_modification_validation();
                         break;
+                    case "espace_membre" :
+                        // Vérification du statut de membre de l'utilisateur authentifié
+                        if(Security::isMember()) {
+                            echo "Accès à l'espace membre !";
+                        } else {
+                            // Si l'utilisateur ne dispose pas du rôle administrateur, on envoie un message d'alerte
+                            Utility::addAlertMessage("Vous ne disposez pas des droits pour accéder à cette section !", Utility::WARNING_MESSAGE);
+                            // On redirige l'utilisateur vers la page de login
+                            Utility::redirect(URL."accueil");
+                        }
+                        break;
+                    case "administration" : 
+                        // Vérification du rôle d'administrateur de l'utilisateur authentifié
+                        if(Security::isAdmin()) {
+                            echo "Accès au Back-office !";
+                        } else {
+                            // Si l'utilisateur ne dispose pas du rôle administrateur, on envoie un message d'alerte
+                            Utility::addAlertMessage("Vous ne disposez pas des droits pour accéder à cette section !", Utility::WARNING_MESSAGE);
+                            // On redirige l'utilisateur vers la page de login
+                            Utility::redirect(URL."accueil");
+                        }
+                        break;
                         default:
                         // Dans les autres cas, on lance une exception
                         throw new Exception("La page demandée n'existe pas.");

@@ -95,7 +95,6 @@ a {
     font-family: 'Raleway', sans-serif; 
 }
 
-
 /*****************************************************/
 /***                  Paragraphes                  ***/
 /*****************************************************/
@@ -488,6 +487,10 @@ nav {
     align-items: center;
 }
 
+.authenticated-user-wrap i {
+    color: var(--color-white);
+}
+
 .authenticated-user-wrap a {
     text-decoration: none;
     color: var(--color-white);
@@ -599,11 +602,11 @@ nav {
     display: block;
 }
 
-.admin-item, .logout-item {
+.admin-item, .member-item, .logout-item {
     position: relative;
 }
 
-.admin-item .admin-icon {
+.admin-item .admin-icon, .member-item .member-icon{
     margin-right: 5px;
     font-size: 15px;
     color: var(--color-title);

@@ -48,17 +48,22 @@
                             <a href="<?=URL?>compte/profil">Mon compte</a>
                             <!-- Lien vers la page de modification des informations de profil -->
                             <a href="<?=URL?>compte/modification_profil">Modifier mes informations</a>
-                            <!-- Lien vers la page des publications -->
-                            <a href="#">Blog de l'association</a>
                             <!-- Lien vers la page de modification du mot de passe -->
                             <a href="<?=URL?>compte/modification_mot_de_passe">Modifier mon mot de passe</a>
+                            <!-- Si l'utilisateur authentifié est membre -->
+                            <?php if(isset($_SESSION['user']['isMember']) && $_SESSION['user']['isMember'] == 1) {?>
+                                <!-- On affiche le lien vers l'espace membre -->
+                                <div class="member-item">
+                                    <a href="<?=URL?>compte/espace_membre"><i class="fas fa-users member-icon"></i> Espace membre</a>
+                                </div>
+                            <?php } ?>
                             <!-- Si l'utilisateur authentifié est administrateur -->
-                            
-                            <!-- On affiche le lien vers l'espace d'administration sécurisé -->
-                            <div class="admin-item">
-                                <a href="#"><i class="fas fa-cog admin-icon"></i> Accéder au backoffice</a>
-                            </div>
-                            
+                            <?php if(isset($_SESSION['user']['role']) && $_SESSION['user']['role'] == "ROLE_ADMIN") {?>
+                                <!-- On affiche le lien vers l'espace d'administration sécurisé -->
+                                <div class="admin-item">
+                                    <a href="<?=URL?>compte/administration"><i class="fas fa-cog admin-icon"></i> Accéder au backoffice</a>
+                                </div>
+                            <?php } ?>
                             <hr>
                             <!-- Lien de déconnexion -->
                             <div class="logout-item">

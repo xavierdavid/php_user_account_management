@@ -84,7 +84,8 @@ class AccountController extends MainController
                                 "lastName" => $user->getLastName(),
                                 "coverImage" => $user->getCoverImage(),
                                 "email" => $user->getEmail(),
-                                "role" => $user->getRole()
+                                "role" => $user->getRole(),
+                                "isMember" => $user->getIsMember()
                             ];
                             // Si l'option "Se souvenir de moi" a été sélectionnée
                             if(isset($_POST['rememberMe'])) {
@@ -445,7 +446,8 @@ class AccountController extends MainController
                         "lastName" => $user->getLastName(),
                         "coverImage" => $user->getCoverImage(),
                         "email" => $user->getEmail(),
-                        "role" => $user->getRole()
+                        "role" => $user->getRole(),
+                        "isMember" => $user->getIsMember()
                     ];
                     // Affichage d'un message de succès
                     Utility::addAlertMessage("Votre nouvel email " . $user->getEmail() ." a bien été enregistré !", Utility::SUCCESS_MESSAGE);
@@ -710,7 +712,8 @@ class AccountController extends MainController
                         "lastName" => $user->getLastName(),
                         "coverImage" => $user->getCoverImage(),
                         "email" => $user->getEmail(),
-                        "role" => $user->getRole()
+                        "role" => $user->getRole(),
+                        "isMember" => $user->getIsMember()
                     ];
                     Utility::addAlertMessage("Votre profil a été modifié avec succès !", Utility::SUCCESS_MESSAGE);
                     Utility::redirect(URL."compte/profil");
