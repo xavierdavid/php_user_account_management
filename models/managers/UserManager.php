@@ -14,7 +14,7 @@ class UserManager extends Database
      * @param User $user
      * @return void
      */
-    public function new(User $user)
+    public function insert(User $user)
     {
         // Définition de la requête
         $req = "
@@ -57,7 +57,7 @@ class UserManager extends Database
      * @param User $user
      * @return void
      */
-    public function edit(User $user)
+    public function update(User $user)
     {
         // Définition de la requête
         $req = "UPDATE user set firstName = :firstName, lastName = :lastName, address = :address, phone = :phone, postal = :postal, city = :city, country = :country, coverImage = :coverImage, slug = :slug WHERE id = :id";
@@ -113,7 +113,7 @@ class UserManager extends Database
      * @param [type] $id
      * @return void
      */
-    public function show($id)
+    public function findOneById($id)
     {
         // Définition de la requête
         $req="SELECT * FROM user WHERE id = :id";
@@ -132,7 +132,54 @@ class UserManager extends Database
         // On retourne le résultat la requête (utilisateur)
         return $user;
     }
-    
+
+    /**
+     * Permet de récupérer en base de données une instance de l'objet Utilisateur correspondant à l'email saisi dans le formulaire de connexion ou stocké dans la session
+     *
+     * @param [type] $email
+     * @return void
+     */
+    public function findOneByEmail($email)
+    {
+        // Définition de la requête
+        $req="SELECT * FROM user WHERE email = :email";
+        // Connexion à la base de données et préparation d'une requête
+        $stmt = $this->getDataBase()->prepare($req);
+        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
+        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+        // On définit le mode de récupération sous la forme d'une instance de la classe 'User'
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
+        // On exécute la requête 
+        $stmt->execute();
+        // On récupère le résultat (utilisateur)
+        $user = $stmt->fetch();
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le résultat la requête (utilisateur)
+        return $user;
+    }
+
+    /**
+     * Permet de récupérer en base de données les instances de tous les objets Utilisateurs
+     *
+     * @return void
+     */
+    public function findAll()
+    {
+        // Définition de la requête
+        $req="SELECT * FROM user ORDERBY ASC";
+        // Connexion à la base de données
+        $stmt = $this->getDataBase()->prepare($req);
+        // On définit le mode de récuération sous la forme d'une instance de la classe 'User'
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
+        // On exécute la requête
+        $users = $stmt->fetchAll();
+        // On clôture la requête
+        $stmt->closeCursor();
+        // On retourne le résultat de la requête (utilisateurs)
+        return $users;
+    }
+
     /**
      * Permet de vérifier si l'email d'un utilisateur est présent en base de données
      *
@@ -181,32 +228,6 @@ class UserManager extends Database
         $stmt->closeCursor();
         // On retourne le statut de la requête
         return $isRequestSuccess;
-    }
-
-    /**
-     * Permet de récupérer en base de données une instance de l'objet Utilisateur correspondant à l'email saisi dans le formulaire de connexion ou stocké dans la session
-     *
-     * @param [type] $email
-     * @return void
-     */
-    public function getUserByEmail($email)
-    {
-        // Définition de la requête
-        $req="SELECT * FROM user WHERE email = :email";
-        // Connexion à la base de données et préparation d'une requête
-        $stmt = $this->getDataBase()->prepare($req);
-        // On établit la liaison entre marqueurs de requête et les valeurs correspondantes 
-        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
-        // On définit le mode de récupération sous la forme d'une instance de la classe 'User'
-        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class);
-        // On exécute la requête 
-        $stmt->execute();
-        // On récupère le résultat (utilisateur)
-        $user = $stmt->fetch();
-        // On clôture la requête
-        $stmt->closeCursor();
-        // On retourne le résultat la requête (utilisateur)
-        return $user;
     }
 
     /**

@@ -3,10 +3,11 @@
 // Utilisation de l'Autoloader associé au namespace App
 use App\Autoloader;
 // Utilisation des contrôleurs
-use App\Controllers\Home\HomeController; 
-use App\Controllers\Account\AccountController;
-use App\Services\Security;
 use App\Services\Utility;
+use App\Services\Security;
+use App\Controllers\Home\HomeController; 
+use App\Controllers\Admin\AdminController;
+use App\Controllers\Account\AccountController;
 
 // Démarrage de la session
 session_start();
@@ -18,6 +19,7 @@ Autoloader::register();
 // Instanciation des contrôleurs
 $homeController = new HomeController;
 $accountController = new AccountController;
+$adminController = new AdminController;
 
 // Définition d'une constante d'URL contenant le chemin absolu du site
 define("URL", str_replace("index.php","",(isset($_SERVER['HTTPS']) ? "https" : "http")."://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
@@ -92,7 +94,7 @@ try {
                     case "administration" : 
                         // Vérification du rôle d'administrateur de l'utilisateur authentifié
                         if(Security::isAdmin()) {
-                            echo "Accès au Back-office !";
+                            $adminController->adminHome();
                         } else {
                             // Si l'utilisateur ne dispose pas du rôle administrateur, on envoie un message d'alerte
                             Utility::addAlertMessage("Vous ne disposez pas des droits pour accéder à cette section !", Utility::WARNING_MESSAGE);

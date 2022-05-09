@@ -193,7 +193,7 @@ class HomeController extends MainController
                     Utility::redirect(URL."inscription");    
                 } else {
                     // Sinon on envoie les données de l'utilisateur en base de données à l'aide du UserManager en vérifiant que la requête a bien abouti
-                    if($this->userManager->new($user)) {
+                    if($this->userManager->insert($user)) {
                         // On affiche un message d'alerte de succès
                         Utility::addAlertMessage("Votre compte a été créé avec succès ! Un mail vient d'être envoyé à l'adresse " . $user->getEmail() ." pour valider votre inscription.", Utility::SUCCESS_MESSAGE);
                         // On envoie un email d'activation de compte à l'utilisateur à partir de ses informations

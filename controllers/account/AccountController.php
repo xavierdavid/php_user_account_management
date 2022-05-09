@@ -67,7 +67,7 @@ class AccountController extends MainController
                 }
                 
                 // On récupère en base de données une instance de la classe utilisateur correspondant à l'email saisi 
-                $user = $this->userManager->getUserByEmail($email);
+                $user = $this->userManager->findOneByEmail($email);
                 
                 // Si l'utilisateur existe
                 if($user) {
@@ -147,7 +147,7 @@ class AccountController extends MainController
     public function profile()
     {
         // Récupération des données de l'utilisateur authentifié à partir de son identifiant
-        $userData = $this->userManager->show($_SESSION['user']['id']);
+        $userData = $this->userManager->findOneById($_SESSION['user']['id']);
     
         // Définition d'un tableau associatif regroupant les données d'affichage de la page d'accueil du site
         $data_page = [
@@ -216,7 +216,7 @@ class AccountController extends MainController
                     Utility::redirect(URL."mot_de_passe_oublie");
                 }
                 // On récupère en base de données une instance de la classe utilisateur correspondant à l'email saisi 
-                $user = $this->userManager->getUserByEmail($email);
+                $user = $this->userManager->findOneByEmail($email);
 
                 // Si l'utilisateur existe
                 if($user) {
@@ -429,7 +429,7 @@ class AccountController extends MainController
                     Utility::redirect(URL."compte/profil");
                 }
                 // On récupère en base de données une instance de la classe user correspondant à l'email de l'utilisateur en cours stocké dans la variable de session
-                $user = $this->userManager->getUserByEmail($_SESSION['user']['email']);
+                $user = $this->userManager->findOneByEmail($_SESSION['user']['email']);
 
                 // On affecte la valeur du nouvel email saisi à l'attribut coorespondant de la classe User
                 $user->setEmail($newEmail);
@@ -511,7 +511,7 @@ class AccountController extends MainController
                 // Vérification que le nouveau mot de passe et la confirmation sont identiques
                 if($newPassword === $confirmNewPassword) {
                     // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de son identifiant stocké en session
-                    $user = $this->userManager->show($_SESSION['user']['id']);
+                    $user = $this->userManager->findOneById($_SESSION['user']['id']);
                 
                     // Si l'utilisateur existe
                     if($user) {
@@ -571,7 +571,7 @@ class AccountController extends MainController
     public function user_account_deletion() 
     {
         // On récupère en base de données une instance de l'objet utilisateur authentifié à partir de son identifiant stocké en session
-        $user = $this->userManager->show($_SESSION['user']['id']);
+        $user = $this->userManager->findOneById($_SESSION['user']['id']);
         // On récupère l'ancienne image de profil de l'utilisateur éventuellement stockée en base de données 
         $oldCoverImage = $user->getCoverImage();
         // On supprime cette image du dossier 'public/img/users/'
@@ -601,7 +601,7 @@ class AccountController extends MainController
     public function user_profile_modification()
     {
         // On récupère une instance de l'utilisateur en cours à partir de la session
-        $user = $this->userManager->show($_SESSION['user']['id']);
+        $user = $this->userManager->findOneById($_SESSION['user']['id']);
 
         // Définition d'un tableau associatif regroupant les données d'affichage de la page du formulaire de modification des informations du profil de l'utilisateur
         $data_page = [
@@ -663,7 +663,7 @@ class AccountController extends MainController
                 $_SESSION['editUserData'] = $userData;
 
                 // Récupération d'une instance de l'utilisateur en cours 
-                $user = $this->userManager->show($_SESSION['user']['id']);
+                $user = $this->userManager->findOneById($_SESSION['user']['id']);
                
                 // Modification des informations de l'objet 'User' en cours 
                 $user->setFirstName($firstName);
@@ -680,7 +680,7 @@ class AccountController extends MainController
                     // On définit le dossier cible des images de profil uploadées
                     $dir = "public/img/users/";
                     try {
-                        // On appelle la fonction d'upload d'images de la classe Utility pour renommer et stocker l'image dans le répertoire défini. Cette fonction créée et retourne un nom pour l'image. Ce nom est stocké dans la variable $coverImage
+                        // On appelle la fonction d'upload d'images de la classe Utility pour renommer et stocker l'image dans le répertoire défini. Cette fonction crée et retourne un nom pour l'image. Ce nom est stocké dans la variable $coverImage
                         $coverImage = Utility::uploadImage($_FILES['coverImage'], $dir);   
                         // On récupère l'ancienne image de profil de l'utilisateur éventuellement stockée en base de données 
                         $oldCoverImage = $user->getCoverImage();
@@ -705,7 +705,7 @@ class AccountController extends MainController
                     Utility::redirect(URL."compte/modification_profil"); 
                 } else {
                     // Sinon on enregistre les modifications en base de données et on actualise la session
-                    $isRequestSuccess = $this->userManager->edit($user);
+                    $isRequestSuccess = $this->userManager->update($user);
                     $_SESSION['user'] = [
                         "id" => $user->getId(),
                         "firstName" => $user->getFirstName(),
@@ -727,8 +727,6 @@ class AccountController extends MainController
             }
         }      
     }
-
-
 }
 
 
